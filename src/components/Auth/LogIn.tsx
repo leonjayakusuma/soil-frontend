@@ -51,7 +51,9 @@ export function LogIn() {
                     ...response.data,
                     userId: response.data.id,
                 });
-                popup(`Welcome ${response.data.name}`);
+                const displayName =
+                    (response.data as { name?: string }).name ?? email;
+                popup(`Welcome ${displayName}`);
                 navigate("/");
             }
         });
