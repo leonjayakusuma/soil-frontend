@@ -1,0 +1,114 @@
+import { Box, Button, IconButton } from "@mui/material";
+import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
+import { CartItem, Item } from "@shared/types";
+import { getSOILInfo } from "@/SoilInfo";
+import { useCart } from "@/App";
+import { useNavigate } from "react-router-dom";
+import { addItemToCart } from "@/api";
+import { usePopup } from "../Popup";
+import { getFinalPrice } from "./Price";
+
+/**
+This component handles the button actions for an item. It includes functions for adding 
+items to the cart and updating the quantity and subtotal of existing items in the cart.
+ */
+export function Btns({
+    isHovered,
+    transitionDuration,
+    item,
+}: {
+    isHovered: boolean;
+    transitionDuration: number;
+    item: Item;
+}) {
+    const navigate = useNavigate();
+    const popup = usePopup()!;
+    const [cartItems, setCartItems] = useCart();
+    // const [, setCartItems] = useCart();
+    function handleClickCart() {
+        const tempCartItems = structuredClone(cartItems);
+        const existingItem = cartItems.find(
+            (cartItem) => cartItem.item.id === item.id,
+        ) as CartItem;
+
+        if (existingItem && existingItem.quantity < 255) {
+            existingItem.quantity++;
+            existingItem.subTotal =
+                existingItem.quantity *
+                getFinalPrice(existingItem.item.price, existingItem.item.discount);
+            // cartItemAdded = existingItem;
+            tempCartItems[
+                tempCartItems.findIndex(
+                    (tempCartItem) => existingItem.item.id === tempCartItem.item.id,
+                )
+            ] = existingItem;
+        } else {
+            const newCartItem: CartItem = {
+                item: {
+                    id: item.id,
+                    title: item.title,
+                    price: item.price,
+                    discount: item.discount,
+                    imgUrl: item.imgUrl,
+                },
+                quantity: 1,
+                subTotal: item.price,
+            };
+            tempCartItems.push(newCartItem);
+        }
+
+
+
+        const loggedIn = getSOILInfo().userInfo;
+        if (loggedIn) {
+            console.log(item.id);
+            if (existingItem && existingItem.quantity >= 255) {
+                popup("You can only buy 255 of the same item at a time.");
+            } else {
+                addItemToCart(item.id)
+                    .then((res) => {
+                        if (!res.data) {
+                            popup("Error adding item to cart");
+                            throw new Error("Error adding item to cart");
+                        }
+
+                        setCartItems(tempCartItems);
+                        popup(`Item ${item.title} added to cart`);
+                    })
+                    .catch((error) => {
+                        console.error(error);
+                    });
+            }
+            // setCartItems(tempCartItems);
+        } else {
+            popup(`Please login to buy items.`);
+        }
+    }
+
+    return (
+        <Box
+            display="flex"
+            justifyContent="center"
+            gap={1}
+            maxHeight={isHovered ? "50px" : 0}
+            overflow="hidden"
+            sx={{
+                opacity: isHovered ? 1 : 0,
+                transition: `max-height ${transitionDuration}s ease-out`,
+            }}
+        >
+            <Button
+                aria-label="buy"
+                sx={{ fontSize: "20px" }}
+                onClick={() => {
+                    navigate("/checkout?id=" + item.id);
+                }}
+            >
+                Buy
+            </Button>
+            <IconButton aria-label="add to cart" onClick={handleClickCart}>
+                <AddShoppingCartIcon />
+            </IconButton>
+        </Box>
+    );
+}

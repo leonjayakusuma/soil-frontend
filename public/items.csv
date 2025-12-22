@@ -1,0 +1,46 @@
+﻿id,title,desc,tags,price,discount,reviewRating,reviewCount
+1,Eggs - 12 pack,"A happy hen lays the best eggs, and our eggs are the bestest of the best!",poultry,5.99,6,4.98,30
+2,Chicken - 1kg,"Our free-range chicken have the freedom and capacity to flock around and get plenty of exercise, making them healthy. And you will taste the healthiness greatly!",meat,19.99,1,4.48,42
+3,Salmon and Tuna spread - 100g,From the hardy waterfalls and deep ocean these salmon and tuna have come to satisfy your healthy desires,"meat,fish,spreads",5.99,1,4.9,32
+4,Fresh Salmon - 1kg,From the hardy waterfalls these salmon have come to satisfy your healthy desires,"meat,fish",49.99,6,4.38,42
+5,Fresh Tuna - 1kg,From the deep ocean these salmon have come to satisfy your healthy desires,"meat,fish",29.99,1,4.85,2
+6,Health Boost Fresh Salad Mix,"A mix of kale, cabbage, spinach and asparagus to suit your daily health needs","vegan,prepared",3.99,3,4.07,50
+7,Immunity Boost Fruit Mix,"Got a cold? No worries! Green apple, banana, avacado and watermelon combined will boost those germs away!","vegan,prepared",3.99,4,4.19,30
+8,Veggie Gravy - 100g,"""But I want more veggies"". Ever heard your kid say that? No? Well if they did, now is your chance. And even if they didn't, get it anyway because there is no healthier alternative to gravy, when tomato, broccoli, cabbage, cauliflower, carrot, pea and asparagus blend finely to give you the one of the best gravies you've ever tasted.","vegan,prepared",3.99,7,4.81,6
+9,10 in 1 spice pack,"This one pack contains 4 bags (50g each), 3 of them with individual spices, and one of them with all mixed. The spices are: paprika, pepper, chilli. Now that's hot!","vegan,prepared,condiments",3.99,2,4.53,33
+10,Salt - 100g,Feeling salty?,condiments,9.99,4,4.23,28
+11,Whole grain bread,Freshly baked right from the oven,grains,4.99,7,4.2,10
+12,Multi grain bread,The goodness of bread combined with the goodness of grains,grains,4.99,1,4.16,49
+13,Skim cow milk - 1l,"Getting fat? Try this out, it's 99% fat free!",dairy,2.99,3,4.95,31
+14,Full cream cow milk - 1l,"Getting thin? Try this out, it's 99% fat!",dairy,2.99,7,4.49,17
+15,Skin goat milk - 1l,You read that right!,dairy,2.99,2,4.82,38
+16,Full cream goat milk - 1l,More diversity in milk,dairy,2.99,1,4.33,5
+17,Basmathi rice - 1kg,Harvest from  the finest wheat farms in the world,grains,5.99,5,4.54,1
+18,Long grain rice - 1kg,For those who like it long,grains,4.99,10,4.62,15
+19,Rolled Oats - 1kg,Partially cooked so you won't have to,"grains,cereal",19.99,4,4.99,39
+20,Quick Oats - 1kg,For those who like it quick,"grains,cereal",19.99,9,4.31,48
+21,Avacado - 1kg,Great source of healthy fats,fruit,5.99,3,4.01,34
+22,Papaya - 1kg,Did you know the seed that papaya seeds help in cancer prevention?,fruit,5.99,5,4.93,40
+23,Banana - 1kg,Wanna give a monkey a treat?,fruit,5.99,4,4.5,12
+24,Watermelon - 1kg,"They say it's 92% water. Better off just drinking water then eh? ",fruit,5.99,9,4.61,36
+25,Pink Apple - 1kg,An apple a day keeps the doctor away!,fruit,5.99,10,4.88,34
+26,Red Apple - 1kg,An apple a day keeps the doctor away!,fruit,5.99,10,4.7,50
+27,Green Apple - 1kg,An apple a day keeps the doctor away!,fruit,5.99,10,4.54,2
+28,Kale - 1kg,A sweet tooth? Apparently it becomes sweeter after a frost!,veggie,4.99,4,4.08,50
+29,Cauliflower - 1kg,"It's known to be very hard to grow, but we still provide you with a plentiful supply of the best cauliflowers in Australia",veggie,4.99,6,4.6,37
+30,Cabbage - 1kg,Fill your baggage with cabbage,veggie,4.99,2,4.46,35
+31,Spinach - 1kg,Worked for Popeye,veggie,4.99,6,4.12,23
+32,Broccoli - 1kg,Superfood for boosting immunity,veggie,4.99,5,4.97,45
+33,Tomato - 1kg,It's a fruit!,fruit,4.99,4,4.96,26
+34,Carrot - 1kg,Carrots improving eyesight was originally spread by the Air Ministry in World War II,veggie,4.99,6,4.91,2
+35,Pea - 1kg,"Small, yet healthy and delicious",veggie,4.99,2,4.88,34
+36,Asparagus - 1kg,Their roots can grow 20 feet deep!,veggie,4.99,10,4.17,11
+37,Sugar free Strawberry Jam - 100g,Strawberries aren't berries,spreads,1.99,4,4.28,16
+38,Sugar free Blueberry Jam - 100g,Blueberry could make you smarter,spreads,1.99,7,4.56,41
+39,Sugar free Raspberry Jam - 100g,"Can come in 4 colors: red, black, purple, and golden",spreads,1.99,9,4.12,9
+40,Ground Coffee 100g,Freshly ground coffee,drinks,6.99,4,4.2,29
+41,Ceylon Tea 100g,The finest selections are handpicked by the workers of Ceylon,drinks,6.99,3,4.89,12
+42,Balanced meal pack,"Protein, Vitamins, Minerals, you got em all","prepared,meal",9.99,9,4.25,7
+43,Balanced meal pack - Vegan,"Protein, Vitamins, Minerals, you got em all while being Vegan","prepared,meal,vegan",9.99,9,4.82,32
+44,Cow's skim milk butter - 500g,99% fat free butter,dairy,8.99,3,4.44,46
+45,Lactose free Vegan butter - 500g,"Made using a mixture of rapeseed, coconut, shea butter and almond","dairy,vegan",8.99,4,4.89,7
