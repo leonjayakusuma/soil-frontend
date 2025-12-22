@@ -51,15 +51,34 @@ export function setSOILItem<T extends keyof SoilInfo>(
 }
 
 export function getSOILInfo(): SoilInfo {
-    const RawSoilInfo = getRawSoilInfo();
+    const raw = getRawSoilInfo();
 
-    const items: Item[] = [];
-    // const items: Item[] = RawSoilInfo.items.map((item) => parseItemType(item));
+    // If items are already in parsed form (SoilInfo), just return as-is
+    if (!Array.isArray((raw as UnparsedSoilInfo).items)) {
+        return raw as SoilInfo;
+    }
 
-    return { ...RawSoilInfo, items };
+    // Parse stored items (which are saved as UnparsedItemType) into strongly typed Item[]
+    const items: Item[] = (raw as UnparsedSoilInfo).items.map((item) =>
+        parseItemType(item),
+    );
+
+    return { ...(raw as SoilInfo), items };
 }
 
-function getRawSoilInfo(): UnparsedSoilInfo {
+function getRawSoilInfo(): UnparsedSoilInfo | SoilInfo {
     const SOILStr = localStorage.getItem("SOIL");
     return SOILStr !== null ? JSON.parse(SOILStr) : emptySoilInfo;
+}
+
+// Convert the loose/unparsed item shape from localStorage into a proper Item
+function parseItemType(item: UnparsedItemType): Item {
+    return {
+        ...item,
+        id: Number(item.id),
+        price: Number(item.price),
+        discount: Number(item.discount),
+        reviewRating: Number(item.reviewRating),
+        reviewCount: Number(item.reviewCount),
+    };
 }
