@@ -46,13 +46,28 @@ export async function getProfileInfo() {
     );
 }
 
-export function updateBasicUserInfo(name: string, email: string) {
-    return tryCatchHandlerAuth<{ name: string; email: string }, unknown>(
-        "/api/updateBasicUserInfo",
+export async function updateBasicUserInfo(name: string, email: string) {
+    const accessToken = getSOILInfo().userInfo?.accessToken ?? "";
+    if (!accessToken) {
+        return {
+            data: undefined,
+            msg: "Not logged in - access token missing",
+            isError: true,
+            status: 401,
+        };
+    }
+
+    return tryCatchHandlerAuth<
+        { name: string; email: string; accessToken: string },
+        unknown
+    >(
+        "/api/protected/updateBasicUserInfo",
         {
             name,
             email,
+            accessToken,
         },
+        "POST",
     );
 }
 
@@ -182,9 +197,27 @@ export async function getPersonalInfo() {
 }
 
 export async function updatePersonalInfo(personalInfo: PersonalInfo) {
-    return tryCatchHandlerAuth<PersonalInfo & { isMale: boolean }, unknown>(
-        "/api/updatePersonalInfo",
-        { ...personalInfo, isMale: personalInfo.sex === "male" },
+    const accessToken = getSOILInfo().userInfo?.accessToken ?? "";
+    if (!accessToken) {
+        return {
+            data: undefined,
+            msg: "Not logged in - access token missing",
+            isError: true,
+            status: 401,
+        };
+    }
+
+    return tryCatchHandlerAuth<
+        PersonalInfo & { isMale: boolean; accessToken: string },
+        unknown
+    >(
+        "/api/protected/updatePersonalInfo",
+        {
+            ...personalInfo,
+            isMale: personalInfo.sex === "male",
+            accessToken,
+        },
+        "POST",
     );
 }
 
