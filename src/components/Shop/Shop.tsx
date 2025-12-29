@@ -20,7 +20,7 @@ import {
 import LoadingPage from "@/shared/LoadingPage";
 import { Res, getAllItems } from "@/api";
 import ErrorPage from "@/shared/ErrorPage";
-import { setSOILItem } from "@/SoilInfo";
+import { setSOILItem, getSOILInfo } from "@/SoilInfo";
 
 /**
 This component handles the shop page of the application. It includes state management for 
@@ -35,9 +35,37 @@ export default function Shop() {
     const location = useLocation();
 
     useEffect(() => {
-        console.log("[Shop] Fetching all items...");
+        // Check for cached items first
+        const cachedItems = getSOILInfo().items;
+
+        if (cachedItems && cachedItems.length > 0) {
+            console.log("[Shop] Using cached items, skipping API request:", cachedItems.length);
+            setResponse({
+                data: cachedItems,
+                msg: "Loaded from cache",
+                isError: false,
+                status: 200,
+            });
+            // Don't make API request if we have cached items
+            return;
+        }
+
+        // Only fetch if no cached items exist
+        console.log("[Shop] No cache found, fetching all items...");
+
+        // Abort controller for cleanup
+        const abortController = new AbortController();
+        let isMounted = true;
+        const startTime = Date.now();
+
         getAllItems()
             .then((res) => {
+                if (!isMounted || abortController.signal.aborted) {
+                    console.log("[Shop] Request cancelled (component unmounted)");
+                    return;
+                }
+
+                const fetchTime = Date.now() - startTime;
                 console.log("[Shop] API Response:", {
                     hasData: !!res.data,
                     dataLength: res.data?.length ?? 0,
@@ -45,11 +73,14 @@ export default function Shop() {
                     status: res.status,
                     msg: res.msg,
                     networkError: res.networkError,
+                    fetchTime: `${fetchTime}ms`,
                 });
-                setResponse(res);
-                setSOILItem("items", res.data ?? []);
 
-                if (!res.data || res.data.length === 0) {
+                setResponse(res);
+
+                if (res.data && res.data.length > 0) {
+                    setSOILItem("items", res.data);
+                } else {
                     console.warn("[Shop] ⚠️ No items received from API");
                     if (res.isError) {
                         console.error("[Shop] API Error:", res.msg);
@@ -57,6 +88,9 @@ export default function Shop() {
                 }
             })
             .catch((error) => {
+                if (!isMounted || abortController.signal.aborted) {
+                    return;
+                }
                 console.error("[Shop] Failed to fetch items:", error);
                 setResponse({
                     data: undefined,
@@ -66,6 +100,11 @@ export default function Shop() {
                     networkError: true,
                 });
             });
+
+        return () => {
+            isMounted = false;
+            abortController.abort();
+        };
     }, []);
 
     useEffect(() => {

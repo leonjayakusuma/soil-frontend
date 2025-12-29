@@ -5,6 +5,9 @@ export * from "./Item";
 export * from "./User";
 export * from "./testApi";
 
+// Request deduplication: prevent multiple simultaneous requests to the same URL
+const pendingRequests = new Map<string, Promise<Res<any>>>();
+
 export type Res<T> = {
     data?: T;
     msg: string;
@@ -66,9 +69,21 @@ export async function tryCatchHandler<BodyType, ResponseDataType>(
         fullUrl = base + endpoint;
     }
     
-    try {
-        
-        // Build headers object
+    // Create a unique request key for deduplication (only for GET requests)
+    const requestKey = method === "GET" 
+        ? `${method}:${fullUrl}`
+        : `${method}:${fullUrl}:${JSON.stringify(body)}`;
+    
+    // Check if there's already a pending request for this URL
+    if (pendingRequests.has(requestKey)) {
+        console.log(`[API] Deduplicating request: ${requestKey}`);
+        return pendingRequests.get(requestKey)! as Promise<Res<ResponseDataType>>;
+    }
+    
+    // Create the request promise
+    const requestPromise = (async () => {
+        try {
+            // Build headers object
         const headers: Record<string, string> = {
             "Content-Type": "application/json",
         };
@@ -193,59 +208,68 @@ export async function tryCatchHandler<BodyType, ResponseDataType>(
             });
         }
 
-        return {
-            data: responseData,
-            msg: responseMsg,
-            isError: isErrorResponse || !response.ok,
-            status: response.status,
-            networkError: false,
-        };
-    } catch (error) {
-        console.error("[API] Error:", error); // Only for debugging purposes
-        
-        // Check if it's a network error
-        const errorMessage = error instanceof Error ? error.message : String(error);
-        const isNetworkError = error instanceof TypeError && 
-            (errorMessage.includes("Failed to fetch") || 
-             errorMessage.includes("NetworkError") ||
-             errorMessage.includes("Network request failed") ||
-             errorMessage.includes("Load failed"));
-        
-        // Check for CORS errors
-        const isCorsError = errorMessage.includes("CORS") || 
-            (error instanceof TypeError && errorMessage.includes("Failed to fetch") && 
-             import.meta.env.VITE_API_URL); // Likely CORS if using external URL
-        
-        // Check for timeout
-        const isTimeout = errorMessage.includes("timeout") || 
-            errorMessage.includes("aborted");
-        
-        let userMessage: string;
-        if (isTimeout) {
-            userMessage = "Request timed out. The server took too long to respond. Please check if the API is accessible.";
-        } else if (isCorsError) {
-            userMessage = "CORS error: The API server is not allowing requests from this origin. The server needs to allow cross-origin requests from your development URL.";
-        } else if (isNetworkError) {
-            userMessage = "Unable to connect to the server. Please check:\n- Your internet connection\n- The VITE_API_URL is correct\n- The API server is running and accessible";
-        } else {
-            userMessage = `An unexpected error occurred: ${errorMessage}`;
+            return {
+                data: responseData,
+                msg: responseMsg,
+                isError: isErrorResponse || !response.ok,
+                status: response.status,
+                networkError: false,
+            };
+        } catch (error) {
+            console.error("[API] Error:", error); // Only for debugging purposes
+            
+            // Check if it's a network error
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            const isNetworkError = error instanceof TypeError && 
+                (errorMessage.includes("Failed to fetch") || 
+                 errorMessage.includes("NetworkError") ||
+                 errorMessage.includes("Network request failed") ||
+                 errorMessage.includes("Load failed"));
+            
+            // Check for CORS errors
+            const isCorsError = errorMessage.includes("CORS") || 
+                (error instanceof TypeError && errorMessage.includes("Failed to fetch") && 
+                 import.meta.env.VITE_API_URL); // Likely CORS if using external URL
+            
+            // Check for timeout
+            const isTimeout = errorMessage.includes("timeout") || 
+                errorMessage.includes("aborted");
+            
+            let userMessage: string;
+            if (isTimeout) {
+                userMessage = "Request timed out. The server took too long to respond. Please check if the API is accessible.";
+            } else if (isCorsError) {
+                userMessage = "CORS error: The API server is not allowing requests from this origin. The server needs to allow cross-origin requests from your development URL.";
+            } else if (isNetworkError) {
+                userMessage = "Unable to connect to the server. Please check:\n- Your internet connection\n- The VITE_API_URL is correct\n- The API server is running and accessible";
+            } else {
+                userMessage = `An unexpected error occurred: ${errorMessage}`;
+            }
+            
+            console.error("[API] Error Details:", {
+                errorType: isTimeout ? "timeout" : isCorsError ? "CORS" : isNetworkError ? "network" : "unknown",
+                message: errorMessage,
+                url: fullUrl || url,
+                baseUrl: getApiBaseUrl() || "using proxy/relative",
+            });
+            
+            return {
+                msg: userMessage,
+                isError: true,
+                status: 500,
+                networkError: isNetworkError || isCorsError || isTimeout,
+                errorDetails: errorMessage,
+            };
+        } finally {
+            // Clean up the pending request
+            pendingRequests.delete(requestKey);
         }
-        
-        console.error("[API] Error Details:", {
-            errorType: isTimeout ? "timeout" : isCorsError ? "CORS" : isNetworkError ? "network" : "unknown",
-            message: errorMessage,
-            url: fullUrl || url,
-            baseUrl: getApiBaseUrl() || "using proxy/relative",
-        });
-        
-        return {
-            msg: userMessage,
-            isError: true,
-            status: 500,
-            networkError: isNetworkError || isCorsError || isTimeout,
-            errorDetails: errorMessage,
-        };
-    }
+    })();
+    
+    // Store the promise for deduplication
+    pendingRequests.set(requestKey, requestPromise);
+    
+    return requestPromise as Promise<Res<ResponseDataType>>;
 }
 
 /* Higher order function to fetch data from the server with authorization */
