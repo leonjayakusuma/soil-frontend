@@ -32,7 +32,7 @@ export default defineConfig({
         port: parseInt(CLIENTPORT),
         strictPort: true,
         // Only set up proxy if SERVERPORT is configured (for local development)
-        // If SERVERPORT is not set, the app will use VITE_API_URL for production API
+        // If SERVERPORT is not set, the app will use VITE_API_URL (if set) or relative URLs
         ...(SERVERPORT && {
             proxy: {
                 "/api": {

@@ -3,6 +3,7 @@ import { Tokens } from "@shared/types";
 
 export * from "./Item";
 export * from "./User";
+export * from "./testApi";
 
 export type Res<T> = {
     data?: T;
@@ -15,14 +16,15 @@ export type Res<T> = {
 
 /**
  * Get the API base URL from environment variables
- * In development, uses Vite proxy (empty string for relative URLs)
- * In production, uses VITE_API_URL if set, otherwise falls back to relative URLs
+ * Uses VITE_API_URL if set (in both dev and prod)
+ * Otherwise, in development uses Vite proxy (empty string for relative URLs)
+ * In production without VITE_API_URL, falls back to relative URLs
  */
 function getApiBaseUrl(): string {
-    // In development, Vite proxy handles /api routes
-    // In production, use VITE_API_URL if set
-    if (import.meta.env.PROD && import.meta.env.VITE_API_URL) {
-        return import.meta.env.VITE_API_URL;
+    // Use VITE_API_URL if set (works in both dev and prod)
+    if (import.meta.env.VITE_API_URL) {
+        // Remove trailing slash to avoid double slashes when combining with endpoint
+        return import.meta.env.VITE_API_URL.replace(/\/$/, "");
     }
     // Return empty string for relative URLs (works with Vite proxy in dev)
     return "";
@@ -51,9 +53,20 @@ export async function tryCatchHandler<BodyType, ResponseDataType>(
     method: "GET" | "POST" = "POST",
     needAuth: boolean = false,
 ): Promise<Res<ResponseDataType>> {
+    // Prepend API base URL if needed (declare outside try for error handling)
+    const baseUrl = getApiBaseUrl();
+    let fullUrl: string;
+    
+    if (url.startsWith("http")) {
+        fullUrl = url;
+    } else {
+        // Ensure proper URL construction (avoid double slashes)
+        const base = baseUrl || "";
+        const endpoint = url.startsWith("/") ? url : `/${url}`;
+        fullUrl = base + endpoint;
+    }
+    
     try {
-        // Prepend API base URL if needed
-        const fullUrl = url.startsWith("http") ? url : `${getApiBaseUrl()}${url}`;
         
         // Build headers object
         const headers: Record<string, string> = {
@@ -90,9 +103,31 @@ export async function tryCatchHandler<BodyType, ResponseDataType>(
             headers: Object.keys(headers),
             hasApiKey: !!apiKey,
             apiKeyHeader: apiKey ? apiKeyHeaderName : "none",
+            baseUrl: baseUrl || "using proxy/relative",
         });
         
-        const response = await fetch(fullUrl, options);
+        // Add timeout to fetch request (30 seconds)
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 30000);
+        
+        let response: Response;
+        try {
+            response = await fetch(fullUrl, {
+                ...options,
+                signal: controller.signal,
+            });
+            clearTimeout(timeoutId);
+        } catch (fetchError) {
+            clearTimeout(timeoutId);
+            
+            // Check if it's an abort (timeout) or network error
+            if (fetchError instanceof Error && fetchError.name === "AbortError") {
+                throw new Error("Request timeout: The server did not respond within 30 seconds");
+            }
+            
+            // Re-throw to be caught by outer catch block
+            throw fetchError;
+        }
 
         // Check if response is JSON
         let jsonResponse: any;
@@ -166,22 +201,49 @@ export async function tryCatchHandler<BodyType, ResponseDataType>(
             networkError: false,
         };
     } catch (error) {
-        console.error("API Error:", error); // Only for debugging purposes
+        console.error("[API] Error:", error); // Only for debugging purposes
         
         // Check if it's a network error
+        const errorMessage = error instanceof Error ? error.message : String(error);
         const isNetworkError = error instanceof TypeError && 
-            (error.message.includes("Failed to fetch") || 
-             error.message.includes("NetworkError") ||
-             error.message.includes("Network request failed"));
+            (errorMessage.includes("Failed to fetch") || 
+             errorMessage.includes("NetworkError") ||
+             errorMessage.includes("Network request failed") ||
+             errorMessage.includes("Load failed"));
+        
+        // Check for CORS errors
+        const isCorsError = errorMessage.includes("CORS") || 
+            (error instanceof TypeError && errorMessage.includes("Failed to fetch") && 
+             import.meta.env.VITE_API_URL); // Likely CORS if using external URL
+        
+        // Check for timeout
+        const isTimeout = errorMessage.includes("timeout") || 
+            errorMessage.includes("aborted");
+        
+        let userMessage: string;
+        if (isTimeout) {
+            userMessage = "Request timed out. The server took too long to respond. Please check if the API is accessible.";
+        } else if (isCorsError) {
+            userMessage = "CORS error: The API server is not allowing requests from this origin. The server needs to allow cross-origin requests from your development URL.";
+        } else if (isNetworkError) {
+            userMessage = "Unable to connect to the server. Please check:\n- Your internet connection\n- The VITE_API_URL is correct\n- The API server is running and accessible";
+        } else {
+            userMessage = `An unexpected error occurred: ${errorMessage}`;
+        }
+        
+        console.error("[API] Error Details:", {
+            errorType: isTimeout ? "timeout" : isCorsError ? "CORS" : isNetworkError ? "network" : "unknown",
+            message: errorMessage,
+            url: fullUrl || url,
+            baseUrl: getApiBaseUrl() || "using proxy/relative",
+        });
         
         return {
-            msg: isNetworkError 
-                ? "Unable to connect to the server. Please check your internet connection or API configuration."
-                : "An unexpected error occurred.",
+            msg: userMessage,
             isError: true,
             status: 500,
-            networkError: isNetworkError,
-            errorDetails: error instanceof Error ? error.message : String(error),
+            networkError: isNetworkError || isCorsError || isTimeout,
+            errorDetails: errorMessage,
         };
     }
 }

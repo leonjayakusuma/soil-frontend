@@ -222,35 +222,86 @@ export async function updatePersonalInfo(personalInfo: PersonalInfo) {
 }
 
 export async function addItemToCart(itemId: number) {
-    return tryCatchHandlerAuth<{ itemId: number }, boolean>(
-        "/api/addItemToCart",
-        { itemId },
+    const accessToken = getSOILInfo().userInfo?.accessToken ?? "";
+    if (!accessToken) {
+        return {
+            data: undefined,
+            msg: "Not logged in - access token missing",
+            isError: true,
+            status: 401,
+        };
+    }
+
+    return tryCatchHandlerAuth<
+        { itemId: number; accessToken: string },
+        boolean
+    >(
+        "/api/protected/addItemToCart",
+        { itemId, accessToken },
+        "POST",
     );
 }
 
 export async function getUserCart() {
-    return tryCatchHandlerAuth<
-        {
-            accessToken: string;
-        },
-        CartItem[]
-    >("/api/cart");
+    const accessToken = getSOILInfo().userInfo?.accessToken ?? "";
+    if (!accessToken) {
+        return {
+            data: undefined,
+            msg: "Not logged in - access token missing",
+            isError: true,
+            status: 401,
+        };
+    }
+
+    return tryCatchHandlerAuth<{ accessToken: string }, CartItem[]>(
+        "/api/protected/cart",
+        { accessToken },
+        "POST",
+    );
 }
 
 export async function updateItemQuantityFromCart(
     itemId: number,
     quantity: number,
 ) {
-    return tryCatchHandlerAuth<{ itemId: number; quantity: number }, boolean>(
-        "/api/updateItemQuantityFromCart",
-        { itemId, quantity },
+    const accessToken = getSOILInfo().userInfo?.accessToken ?? "";
+    if (!accessToken) {
+        return {
+            data: undefined,
+            msg: "Not logged in - access token missing",
+            isError: true,
+            status: 401,
+        };
+    }
+
+    return tryCatchHandlerAuth<
+        { itemId: number; quantity: number; accessToken: string },
+        boolean
+    >(
+        "/api/protected/updateItemQuantityFromCart",
+        { itemId, quantity, accessToken },
+        "POST",
     );
 }
 
 export async function deleteItemFromCart(itemId: number) {
-    return tryCatchHandlerAuth<{ itemId: number }, boolean>(
-        "/api/deleteItemFromCart",
-        { itemId },
+    const accessToken = getSOILInfo().userInfo?.accessToken ?? "";
+    if (!accessToken) {
+        return {
+            data: undefined,
+            msg: "Not logged in - access token missing",
+            isError: true,
+            status: 401,
+        };
+    }
+
+    return tryCatchHandlerAuth<
+        { itemId: number; accessToken: string },
+        boolean
+    >(
+        "/api/protected/deleteItemFromCart",
+        { itemId, accessToken },
+        "POST",
     );
 }
 
