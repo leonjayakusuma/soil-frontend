@@ -9,15 +9,24 @@
  */
 
 import { testApiConnectivity, getApiInfo } from "./index";
-import dotenv from "dotenv";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
 
 /**
  * Node.js-compatible API test function
  * Uses process.env instead of import.meta.env (which is Vite-specific)
+ * This function only runs in Node.js and uses dynamic imports to avoid browser bundling
  */
 async function testApiNodeJs(endpoint: string = "/health") {
+    // Only import Node.js modules when running in Node.js
+    if (typeof process === 'undefined' || !process.argv) {
+        throw new Error("This function can only be run in Node.js environment");
+    }
+    
+    // Use dynamic imports with @vite-ignore to prevent Vite from bundling Node.js modules
+    // These modules are only needed when running in Node.js, not in the browser
+    const { fileURLToPath } = await import(/* @vite-ignore */ "url");
+    const { dirname, join } = await import(/* @vite-ignore */ "path");
+    const dotenv = await import(/* @vite-ignore */ "dotenv");
+    
     // Load environment variables
     const __filename = fileURLToPath(import.meta.url);
     const __dirname = dirname(__filename);
