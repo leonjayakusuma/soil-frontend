@@ -19,7 +19,6 @@ export function MealDisplay({ meals }: { meals: DayMeal[] }) {
 
     const [currPage, setCurrPage] = useState(0);
 
-    console.log(meals);
     if (numPages === 0) {
         return <Typography>No meals to display based on settings</Typography>;
     }

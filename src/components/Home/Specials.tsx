@@ -32,7 +32,7 @@ export function Specials({
                 }
                 setSpecialsArray(data.data);
             })
-            .catch((error) => console.log(error));
+            .catch((error) => console.error(error));
     }, []);
 
     return (

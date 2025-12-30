@@ -30,7 +30,6 @@ export function DesktopMenu({
     const styles = useContext(NavbarCtx)!;
     const [cartItems] = useCart();
     const itemsCount = cartItems.length;
-    console.log(itemsCount);
 
     let finalSx = styles.boxStyle;
     if (fixed) {

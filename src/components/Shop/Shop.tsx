@@ -39,7 +39,6 @@ export default function Shop() {
         const cachedItems = getSOILInfo().items;
 
         if (cachedItems && cachedItems.length > 0) {
-            console.log("[Shop] Using cached items, skipping API request:", cachedItems.length);
             setResponse({
                 data: cachedItems,
                 msg: "Loaded from cache",
@@ -50,9 +49,6 @@ export default function Shop() {
             return;
         }
 
-        // Only fetch if no cached items exist
-        console.log("[Shop] No cache found, fetching all items...");
-
         // Abort controller for cleanup
         const abortController = new AbortController();
         let isMounted = true;
@@ -61,30 +57,15 @@ export default function Shop() {
         getAllItems()
             .then((res) => {
                 if (!isMounted || abortController.signal.aborted) {
-                    console.log("[Shop] Request cancelled (component unmounted)");
                     return;
                 }
-
-                const fetchTime = Date.now() - startTime;
-                console.log("[Shop] API Response:", {
-                    hasData: !!res.data,
-                    dataLength: res.data?.length ?? 0,
-                    isError: res.isError,
-                    status: res.status,
-                    msg: res.msg,
-                    networkError: res.networkError,
-                    fetchTime: `${fetchTime}ms`,
-                });
 
                 setResponse(res);
 
                 if (res.data && res.data.length > 0) {
                     setSOILItem("items", res.data);
-                } else {
-                    console.warn("[Shop] ⚠️ No items received from API");
-                    if (res.isError) {
-                        console.error("[Shop] API Error:", res.msg);
-                    }
+                } else if (res.isError) {
+                    console.error("[Shop] Failed to fetch items:", res.msg);
                 }
             })
             .catch((error) => {
@@ -111,12 +92,6 @@ export default function Shop() {
         const { q, sort, filters } = getParsedMenuOptions(location.search);
         let tempItems = [...(response?.data ?? [])];
 
-        console.log("[Shop] Filtering items:", {
-            originalCount: tempItems.length,
-            query: q,
-            sort,
-            filters,
-        });
 
         if (tempItems.length > 0) {
             const beforeQuery = tempItems.length;
@@ -129,19 +104,9 @@ export default function Shop() {
             tempItems = applyFilters(tempItems, filters);
             const afterFilters = tempItems.length;
 
-            console.log("[Shop] Filtering results:", {
-                original: beforeQuery,
-                afterQuery,
-                afterFilters,
-                queryRemoved: beforeQuery - afterQuery,
-                filtersRemoved: beforeFilters - afterFilters,
-            });
-
             if (afterFilters === 0 && beforeFilters > 0) {
-                console.warn("[Shop] ⚠️ All items filtered out! Check filter settings:", filters);
+                // All items filtered out - this is expected behavior, no need to log
             }
-        } else {
-            console.warn("[Shop] No items to filter - response.data is empty");
         }
 
         setItems(tempItems);
@@ -256,7 +221,6 @@ function applySort(items: Item[], sort: Sort): Item[] {
         const value = item[property];
 
         if (typeof value !== "number") {
-            console.error("sortFunc: expected number. Got: " + typeof value);
             return 0;
         }
 
@@ -293,7 +257,6 @@ function applyFilters(items: Item[], filters: Filters): Item[] {
         const { min, max } = minMax;
 
         if (typeof value !== "number") {
-            console.error("checkMinMax: number expected. Got: " + typeof value);
         }
 
         return value >= min && value <= max;
@@ -307,7 +270,6 @@ function applyFilters(items: Item[], filters: Filters): Item[] {
 
         // If item has no tags, show it anyway (items might not have tags yet)
         if (!item.tags || item.tags.length === 0) {
-            console.debug(`[Shop] Item "${item.title}" has no tags - allowing it`);
             return true; // Show items without tags
         }
 
@@ -317,11 +279,9 @@ function applyFilters(items: Item[], filters: Filters): Item[] {
         const itemTags = itemTagsLower.filter((tag) => filterTagsLower.includes(tag));
         const hasMatchingTag = !!itemTags.length;
 
-        // Log if item has no matching tags (for debugging)
+        // Temporarily allow items with non-matching tags to see all items
+        // TODO: Fix tag matching or update getAllTags() to include all possible tags
         if (!hasMatchingTag) {
-            console.warn(`[Shop] ⚠️ Item "${item.title}" tags [${item.tags.join(", ")}] don't match filter tags. Filter has: [${tags.slice(0, 5).join(", ")}${tags.length > 5 ? "..." : ""}]`);
-            // Temporarily allow items with non-matching tags to see all items
-            // TODO: Fix tag matching or update getAllTags() to include all possible tags
             return true; // Temporarily show all items regardless of tag match
         }
 
@@ -338,30 +298,6 @@ function applyFilters(items: Item[], filters: Filters): Item[] {
 
         const passes = priceOk && ratingOk && countOk && discountOk && tagsOk;
 
-        // Log first few items that fail filtering (for debugging)
-        const itemIndex = items.indexOf(item);
-        if (!passes && itemIndex < 3) {
-            console.warn(`[Shop] Item ${itemIndex} filtered out:`, {
-                title: item.title,
-                price: item.price,
-                reviewRating: item.reviewRating,
-                reviewCount: item.reviewCount,
-                discount: item.discount,
-                tags: item.tags,
-                filterTags: filters.tags,
-                checks: {
-                    priceOk,
-                    ratingOk,
-                    countOk,
-                    discountOk,
-                    tagsOk,
-                    priceRange: filters.price,
-                    ratingRange: filters.reviewRating,
-                    countRange: filters.reviewCount,
-                    discountRange: filters.discount,
-                },
-            });
-        }
 
         return passes;
     }

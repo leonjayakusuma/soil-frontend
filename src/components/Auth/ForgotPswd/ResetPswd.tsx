@@ -29,10 +29,8 @@ export function ResetPswd({ email, name, oldPassword, paginate }: ResetPswdProps
 
     function onPswdChange(newPassword: string) {
         // const success = updatePswd(email, pswd);
-        console.log({ oldPassword, newPassword });
         changePassword(oldPassword, newPassword).then(
             (data) => {
-                console.log()
                 if (!data.data) {
                     popup("Something went wrong updating password");
                     throw new Error(data.msg);

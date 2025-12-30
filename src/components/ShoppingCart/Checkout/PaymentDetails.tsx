@@ -71,8 +71,6 @@ export function PaymentDetails() {
             luhnValidateUnionPay: true,
         }).isPotentiallyValid;
         const validCVV = valid.cvv(cvv).isPotentiallyValid;
-        console.log(cardNumber);
-        console.log(validCardNumber, validExpirationDate);
         if (filled) {
             if (validCardNumber && validExpirationDate && validCVV) {
                 // const user = getSOILInfo().user;

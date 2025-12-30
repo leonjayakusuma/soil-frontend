@@ -205,9 +205,7 @@ function EnterOldPswd({
 
     function handleSubmit(e: React.SyntheticEvent) {
         e.preventDefault();
-        console.log(oldPassword);
         checkOldPswd(oldPassword).then((data) => {
-            console.log(data);
             if (!data.data) {
                 setOldPswdErrorTxt("Incorrect password");
                 throw new Error(data.msg);

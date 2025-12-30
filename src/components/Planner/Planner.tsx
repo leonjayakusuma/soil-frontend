@@ -176,7 +176,6 @@ function generateDayMeal(
     const fatNeeded = weight * (healthGoals === "weight loss" ? 0.5 : 1);
 
     const recipes = getAllValidRecipes(allRecipes);
-    console.log(recipes);
 
     return {
         breakfast: recipes[Math.floor(Math.random() * recipes.length)],

@@ -76,7 +76,6 @@ export async function tryCatchHandler<BodyType, ResponseDataType>(
     
     // Check if there's already a pending request for this URL
     if (pendingRequests.has(requestKey)) {
-        console.log(`[API] Deduplicating request: ${requestKey}`);
         return pendingRequests.get(requestKey)! as Promise<Res<ResponseDataType>>;
     }
     
@@ -98,9 +97,6 @@ export async function tryCatchHandler<BodyType, ResponseDataType>(
         const apiKeyHeaderName = getApiKeyHeaderName();
         if (apiKey) {
             headers[apiKeyHeaderName] = apiKey;
-            console.log(`[API] Adding API key header: ${apiKeyHeaderName}`);
-        } else {
-            console.warn("[API] No API key configured. Set VITE_API_KEY in your environment variables if your API requires it.");
         }
         
         const options: RequestInit = {
@@ -110,16 +106,6 @@ export async function tryCatchHandler<BodyType, ResponseDataType>(
         if (method === "POST") {
             options.body = JSON.stringify(body);
         }
-        
-        // Log request details for debugging
-        console.log("[API] Request:", {
-            url: fullUrl,
-            method,
-            headers: Object.keys(headers),
-            hasApiKey: !!apiKey,
-            apiKeyHeader: apiKey ? apiKeyHeaderName : "none",
-            baseUrl: baseUrl || "using proxy/relative",
-        });
         
         // Add timeout to fetch request (30 seconds)
         const controller = new AbortController();
@@ -178,34 +164,10 @@ export async function tryCatchHandler<BodyType, ResponseDataType>(
             isErrorResponse = !response.ok;
         }
 
-        // Log response details including any error messages about API key
-        console.log("[API] Response:", {
-            url: fullUrl,
-            status: response.status,
-            statusText: response.statusText,
-            response: jsonResponse,
-            parsedData: {
-                hasData: !!responseData,
-                dataLength: Array.isArray(responseData) ? responseData.length : responseData ? 1 : 0,
-                msg: responseMsg,
-                isError: isErrorResponse,
-            },
-            headersSent: {
-                hasApiKey: !!apiKey,
-                apiKeyHeader: apiKey ? apiKeyHeaderName : "none",
-                hasAuth: needAuth,
-            },
-        });
-        
         // Check if response indicates missing API key
         const errorMsg = responseMsg.toLowerCase();
         if (errorMsg.includes("api key") || errorMsg.includes("missing") && errorMsg.includes("key")) {
-            console.warn("[API] ⚠️ API key issue detected in response:", responseMsg);
-            console.warn("[API] Current API key configuration:", {
-                hasApiKey: !!apiKey,
-                apiKeyHeader: apiKeyHeaderName,
-                apiKeyLength: apiKey ? apiKey.length : 0,
-            });
+            console.warn("[API] API key issue:", responseMsg);
         }
 
             return {
@@ -216,8 +178,6 @@ export async function tryCatchHandler<BodyType, ResponseDataType>(
                 networkError: false,
             };
         } catch (error) {
-            console.error("[API] Error:", error); // Only for debugging purposes
-            
             // Check if it's a network error
             const errorMessage = error instanceof Error ? error.message : String(error);
             const isNetworkError = error instanceof TypeError && 
@@ -246,12 +206,10 @@ export async function tryCatchHandler<BodyType, ResponseDataType>(
                 userMessage = `An unexpected error occurred: ${errorMessage}`;
             }
             
-            console.error("[API] Error Details:", {
-                errorType: isTimeout ? "timeout" : isCorsError ? "CORS" : isNetworkError ? "network" : "unknown",
-                message: errorMessage,
-                url: fullUrl || url,
-                baseUrl: getApiBaseUrl() || "using proxy/relative",
-            });
+            // Log error details only for non-network errors (network errors are expected in some cases)
+            if (!isNetworkError && !isTimeout) {
+                console.error("[API] Error:", errorMessage);
+            }
             
             return {
                 msg: userMessage,
@@ -284,7 +242,6 @@ export async function tryCatchHandlerAuth<BodyType, ResponseDataType>(
         method,
         true,
     );
-    console.log(res);
     if (res.status === 401) {
         // Access token expired
         // So request a new one
@@ -298,7 +255,6 @@ export async function tryCatchHandlerAuth<BodyType, ResponseDataType>(
                 refreshToken: currRefreshToken,
             },
         );
-        console.log("getting new access token");
         if (!newAccessTokenRes.data || newAccessTokenRes.isError) {
             return {
                 msg: "Session expired. Please login again",

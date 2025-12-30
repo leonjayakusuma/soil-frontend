@@ -61,7 +61,6 @@ export function Btns({
 
         const loggedIn = getSOILInfo().userInfo;
         if (loggedIn) {
-            console.log(item.id);
             if (existingItem && existingItem.quantity >= 255) {
                 popup("You can only buy 255 of the same item at a time.");
             } else {

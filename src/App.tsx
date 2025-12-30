@@ -69,7 +69,7 @@ export const theme = createTheme({
 });
 
 function onAppStart() {
-    console.log("app start");
+    // App initialization
 }
 
 // Needed for when login is checked for dynamic changes

@@ -60,7 +60,6 @@ export function DataGridComponent() {
         if (loggedIn) {
             // loggedIn.cart = itemsTemp;
             // setSOILItem("user", loggedIn);
-            console.log(updatedRow);
             updateItemQuantityFromCart(updatedRow.item.id, updatedRow.quantity);
             setCartItems(itemsTemp);
         }

@@ -61,9 +61,7 @@ export default function ProfilePage() {
 
     useLayoutEffect(() => {
         const isLoggedIn = !!userInfo;
-        console.log(isLoggedIn);
         if (!isLoggedIn) {
-            console.log("called here");
             navigate("/login");
         }
     }, []); // Empty dependancy array as it causes navigational issues
@@ -83,18 +81,15 @@ export default function ProfilePage() {
     useEffect(() => {
         // const accessToken = userInfo?.accessToken ? userInfo.accessToken : "";
         // console.log(accessToken);
-        console.log("something");
         getProfileInfo().then((data) => {
-            console.log("something");
             if (!data.data) {
                 throw new Error(data.msg);
             }
-            console.log(data);
             // setProfileInfo(data.data);
             setUsername(data.data.name);
             setEmail(data.data.email);
             setDateJoined(data.data.dateJoined);
-        }).catch((error) => console.log(error));
+        }).catch((error) => console.error(error));
     }, []);
 
 

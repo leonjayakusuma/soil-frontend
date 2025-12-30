@@ -57,7 +57,6 @@ export function CartTotalCard({ hasAction = false }: { hasAction?: boolean }) {
         const params = queryString.parse(window.location.search);
 
         const itemId = parseInt((params.id ?? "") as string); // Because it won't be an array, if it is it would be NaN so no issue
-        console.log(itemId);
         if (itemId) {
             getItem(itemId).then((res) => {
                 if (!res.data) {
@@ -94,7 +93,6 @@ export function CartTotalCard({ hasAction = false }: { hasAction?: boolean }) {
     let cartItems = localCartItems;
 
     if (item) {
-        console.log("Item: ", item);
 
         cartItems = [
             {
@@ -118,7 +116,6 @@ export function CartTotalCard({ hasAction = false }: { hasAction?: boolean }) {
         100;
     const navigate = useNavigate();
     const handleClick = () => {
-        console.info("Proceeded to Checkout Page");
         navigate("/checkout");
     };
 

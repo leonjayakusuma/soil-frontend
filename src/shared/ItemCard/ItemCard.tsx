@@ -260,8 +260,6 @@ function Tag({ text }: { text: string }) {
 
         const urlParams = queryString.stringify({ ...parsedParams, q: "" });
 
-        console.log(params);
-        console.log(defaultParams);
 
         window.open(`/shop?${urlParams}`, "_blank");
     }
