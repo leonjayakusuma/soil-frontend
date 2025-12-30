@@ -137,7 +137,7 @@ export default function ItemCard(item: Item) {
                     width: "345px",
                     height: "250px",
                 }}
-                image={imgUrl && imgUrl != '' ? imgUrl : `/src/assets/itempics/${id}.jpg`}
+                image={imgUrl && imgUrl != '' ? imgUrl : `/itempics/${id}.jpg`}
                 alt={`${title} image`}
             />
             <CardContent sx={{ p: "25px" }}>

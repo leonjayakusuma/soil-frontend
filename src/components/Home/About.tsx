@@ -1,5 +1,6 @@
 import ParallaxPage from "@/shared/ParallaxPage";
 import bg_vid from "@/assets/bg vid.mp4";
+import homepagefruits2 from "@/assets/homepagefruits2.png";
 import { Box, Button, Typography, useMediaQuery } from "@mui/material";
 
 /**
@@ -135,7 +136,7 @@ function Img() {
         >
             <Box
                 component={"img"}
-                src="/src/assets/homepagefruits2.png"
+                src={homepagefruits2}
                 alt="organic food image"
                 sx={{
                     width: "100%",

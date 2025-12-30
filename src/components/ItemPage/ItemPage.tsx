@@ -112,7 +112,7 @@ export default function ItemPage() {
                             imgPath={
                                 response.data.imgUrl && response.data.imgUrl != '' ?
                                     response.data.imgUrl :
-                                    `/src/assets/itempics/${response.data.id}.jpg`}
+                                    `/itempics/${response.data.id}.jpg`}
                         />
                     </Box>
                     <Box
