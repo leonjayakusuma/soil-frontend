@@ -6,12 +6,13 @@
  */
 export function ImgDiv({ imgPath }: { imgPath: string }) {
     return (
-        <>
+        // <>
             <img src={imgPath} alt="item picture" style={{
                 borderRadius: "10px",
                 width: "100%",
+                height: "100%",
                 objectFit: "cover"
             }} />
-        </>
+        // </>
     );
 }

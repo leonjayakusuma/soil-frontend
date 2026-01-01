@@ -3,13 +3,14 @@ import queryString from "query-string";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { ImgDiv, InfoDiv, ReviewDiv } from ".";
-import { Box, Paper, Stack } from "@mui/material";
+import { Box, Container, Paper, Stack } from "@mui/material";
 import ErrorPage from "@/shared/ErrorPage";
 import ParallaxPage from "@/shared/ParallaxPage";
 import plant1 from "@/assets/plants1.jpg";
 import { getItem, getItemReviews } from "@/api/Item";
 import { Res } from "@/api";
 import LoadingPage from "@/shared/LoadingPage";
+import { Btns } from "@/shared/ItemCard/Btns";
 
 /**
  * This is the ItemPage component. It's a functional component that displays detailed information about a specific item.
@@ -77,59 +78,35 @@ export default function ItemPage() {
     const imgPerc = 50;
 
     return (
-        <ParallaxPage img={plant1}>
-            <Stack alignItems={"center"} px={1}>
-                <Paper
+        <Stack width="100%" sx={{ minHeight: "100vh" }} bgcolor="white" color="black">
+            <Container maxWidth="xl" sx={{ display: "flex", gap: 3, marginY: "100px" }}>
+                <Box
                     sx={{
-                        p: 1,
-                        marginY: "150px",
-                        width: "1500px",
+                        width: { xs: "240px", md: "350px" },
+                        height: { xs: "240px", md: "350px" },
+                        minWidth: { xs: "240px"},
+                        flexShrink: 0,
                         display: "flex",
-                        "@media (max-width: 1600px)": {
-                            width: "100%",
-                            marginX: "10px",
-                            flexDirection: "column",
-                            alignItems: "center",
-                        },
+                        alignItems: "center",
                     }}
                 >
-                    {/* <Stack direction="row" > */}
-                    <Box
-                        marginRight={"30px"}
-                        width={`${imgPerc}%`}
-                        display="block"
-                        sx={{
-                            "@media (max-width: 1600px)": {
-                                margin: "auto",
-                            },
-                            "@media (max-width: 1000px)": {
-                                width: "100%",
-                                margin: "auto",
-                            },
-                        }}
-                    >
-                        <ImgDiv
-                            imgPath={
-                                response.data.imgUrl && response.data.imgUrl != '' ?
-                                    response.data.imgUrl :
-                                    `/itempics/${response.data.id}.jpg`}
-                        />
-                    </Box>
-                    <Box
-                        width={`${100 - imgPerc}%`}
-                        marginTop={"10px"}
-                        sx={{
-                            "@media (max-width: 1000px)": {
-                                width: "100%",
-                            },
-                        }}
-                    >
-                        <InfoDiv {...response.data} />
-                    </Box>
-                    {/* </Stack> */}
-                </Paper>
-                <ReviewDiv itemId={response.data.id} priorityReviewId={priorityReviewId} />
-            </Stack>
-        </ParallaxPage>
+                    <ImgDiv
+                        imgPath={
+                            response.data.imgUrl && response.data.imgUrl != '' ?
+                                response.data.imgUrl :
+                                `/itempics/${response.data.id}.jpg`}
+                    />
+                </Box>
+                <Box
+                    width={{ xs: "100%", md: `${100 - imgPerc}%` }}
+                >
+                    <InfoDiv {...response.data} />
+                    <Btns isHovered={true} transitionDuration={0.3} item={response.data} />
+                </Box>
+            </Container>
+            {/* <Box width="100%" sx={{ px: { xs: 2, md: 3 }, pb: 3 }}> */}
+            <ReviewDiv itemId={response.data.id} priorityReviewId={priorityReviewId} />
+            {/* </Box> */}
+        </Stack>
     );
 }

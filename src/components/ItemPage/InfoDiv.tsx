@@ -45,29 +45,32 @@ export function InfoDiv({
 
     return (
         <>
-            <Stack
-                direction="row"
-                justifyContent="start"
-                color="white"
-                fontSize={13}
-            >
-                {isSpecial && <Special />}
-                {isMeatOrPoultry && <FreeRange />}
-                <Organic />
-            </Stack>
-            <Typography variant="h3" fontWeight={700} marginY={"10px"}>
+            <Typography variant="h5" fontWeight={700} marginY={"10px"}>
                 {title}
             </Typography>
-            <Tags tags={tags} />
-            <Typography fontSize={"20px"} marginY={"30px"}>
-                {desc}
-            </Typography>
-            <Price price={price} discount={discount} />
             <DiscountAndRating
                 discount={discount}
                 reviewCount={reviewCount}
                 reviewRating={reviewRating}
             />
+            {/* <Price price={price} discount={discount} /> */}
+            <Typography variant="h5" fontWeight={700} marginY={"10px"}>A$ {price}</Typography>
+            <Stack
+                direction="row"
+                justifyContent="start"
+                color="white"
+                fontSize={13}
+                marginY={"10px"}
+            >
+                {isSpecial && <Special />}
+                {isMeatOrPoultry && <FreeRange />}
+                <Organic />
+            </Stack>
+            <Tags tags={tags} />
+            <Typography fontSize={"20px"} marginY={"30px"}>
+                {desc}
+            </Typography>
+            
         </>
     );
 }

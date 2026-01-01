@@ -22,16 +22,17 @@ export function DiscountAndRating({
             color="white"
             fontSize={17}
         >
-            <Box
+            {/* <Box
                 sx={{ backgroundColor: "#228B22" }}
                 px={0.4}
                 mt={0.1}
                 fontWeight={500}
                 letterSpacing={1}
                 borderRadius={0.4}
+                fontSize={10}
             >
                 {`SAVE ${discount}%`}
-            </Box>
+            </Box> */}
             <Stack direction="row" alignItems="center">
                 {/* Have star amoutn and number of people voted for it */}
                 <Rating

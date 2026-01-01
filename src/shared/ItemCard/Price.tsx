@@ -61,13 +61,12 @@ export function Price({
     );
 
     return (
-        <Stack direction="row" marginY={"10px"} alignItems={"center"}>
-            <Typography variant="h5" fontWeight={600}>
+        <Stack direction="row" alignItems={"center"}>
+            <Typography variant="h5" fontWeight={600} fontSize={20}>
                 {`A$ ${getFinalPrice(price, discount)}`}
             </Typography>
-            <Box
+            {/* <Box
                 position="relative"
-                ml={"20px"}
                 borderRadius={0.5}
                 sx={{
                     backgroundColor: "#B22222",
@@ -75,7 +74,7 @@ export function Price({
                 px={0.5}
                 py={0.2}
             >
-                <Typography ref={measuredRef} variant="h5" fontWeight={600} color={"white"}>
+                <Typography ref={measuredRef} variant="h5" fontWeight={500} color={"white"}>
                     <hr
                         style={{
                             position: "absolute",
@@ -91,9 +90,8 @@ export function Price({
                         }}
                     />
                     {`A$ ${price}`}
-                    {/* {`A$ ${(price + 5).toFixed(2)}`} */}
                 </Typography>
-            </Box>
+            </Box> */}
         </Stack>
     );
 }

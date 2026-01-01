@@ -128,7 +128,7 @@ export default function Shop() {
                 alignItems="center"
                 sx={{ paddingTop: "100px" }}
             >
-                <Typography variant="h2" textAlign="center" mb="100px">
+                <Typography variant="h2" textAlign="center" mb="100px" color="white">
                     Buy Fresh Foods, Catalogue Updated Daily
                 </Typography>
                 {items.length === 0 ? (
@@ -145,7 +145,6 @@ export default function Shop() {
                     <Stack
                         direction="row"
                         flexWrap="wrap"
-                        rowGap={2}
                         justifyContent="center"
                     >
                         {items.map((item: Item) => (

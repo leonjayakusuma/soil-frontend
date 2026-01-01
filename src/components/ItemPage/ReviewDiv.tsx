@@ -39,15 +39,8 @@ export function ReviewDiv({
 
     // TODO: implement paginate too
     return (
-        <Box
-            width={"900px"}
-            sx={{
-                "@media (max-width: 1600px)": {
-                    width: "100%",
-                },
-            }}
-        >
-            <ReviewForm itemId={itemId} setReviews={setReviews} />
+        <Box width="100%">
+            {/* <ReviewForm itemId={itemId} setReviews={setReviews} /> */}
             <ReviewDisplay
                 reviews={reviews}
                 setReviews={setReviews}

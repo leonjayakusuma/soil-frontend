@@ -47,7 +47,7 @@ export default function ItemCard(item: Item) {
         transition: "transform 0.3s ease-in",
         m: 1,
         "&:hover": {
-            transform: "scale(1.15)",
+            transform: "scale(1.05)",
             zIndex: 10,
         },
     };
@@ -130,36 +130,30 @@ export default function ItemCard(item: Item) {
                 setIsHovered(false);
             }}
             raised={isHovered}
+            style={{ width: "188px" }}
+            component={RouterLink}
+            to={`/item?itemId=${id}`}
         >
             <CardMedia
                 component="img"
                 sx={{
-                    width: "345px",
-                    height: "250px",
+                    width: "188px",
+                    height: "188px",
                 }}
                 image={imgUrl && imgUrl != '' ? imgUrl : `/itempics/${id}.jpg`}
                 alt={`${title} image`}
             />
-            <CardContent sx={{ p: "25px" }}>
+            <CardContent sx={{ p: "10px" }} >
                 <Stack rowGap={0.4}>
-                    <Stack
-                        direction="row"
-                        justifyContent="end"
-                        color="white"
-                        fontSize={13}
-                    >
-                        {isSpecial && <Special />}
-                        {isMeatOrPoultry && <FreeRange />}
-                        <Organic />
-                    </Stack>
+                    
                     {/* Using HTML button instead of MUI because I want no extra styling */}
                     <Typography
-                        variant="h4"
+                        variant="h5"
                         overflow="hidden"
-                        component={RouterLink}
-                        to={`/item?itemId=${id}`}
+                        // component={RouterLink}
+                        // to={`/item?itemId=${id}`}
                         textAlign="left"
-                        marginY={"10px"}
+                        fontSize={16}
                         sx={{
                             WebkitLineClamp: "2",
                             WebkitBoxDirection: "vertical",
@@ -167,8 +161,35 @@ export default function ItemCard(item: Item) {
                     >
                         {title}
                     </Typography>
+                    <Stack direction="row" justifyContent="space-between">
+                        <Price price={price} discount={discount} />
+                        <Box
+                            sx={{ backgroundColor: "#228B22" }}
+                            px={0.4}
+                            mt={0.1}
+                            fontWeight={500}
+                            letterSpacing={1}
+                            borderRadius={0.4}
+                            fontSize={10}
+                        >
+                            {`SAVE ${discount}%`}
+                        </Box>        
+                    </Stack>
+                    {/* <Stack
+                        direction="row"
+                        justifyContent="end"
+                        flexWrap="wrap"
+                        color="white"
+                        fontSize={10}
+                        gap={0.1}
+                    >
+                        {isSpecial && <Special />}
+                        {isMeatOrPoultry && <FreeRange />}
+                        
+                        <Organic />
+                    </Stack> */}
                     <Tags tags={tags} />
-                    <Typography
+                    {/* <Typography
                         ref={descRef}
                         variant="body2"
                         color="text.secondary"
@@ -179,8 +200,7 @@ export default function ItemCard(item: Item) {
                         height={descHeight}
                     >
                         {desc}
-                    </Typography>
-                    <Price price={price} discount={discount} />
+                    </Typography> */}
                     <DiscountAndRating
                         discount={discount}
                         reviewCount={reviewCount}
@@ -199,7 +219,7 @@ export default function ItemCard(item: Item) {
 
 export function Tags({ tags }: { tags: string[] }) {
     return (
-        <Stack direction="row" color="white" fontSize={10}>
+        <Stack direction="row" flexWrap="wrap" color="white" fontSize={10} gap={0.1}>
             {tags.map((tag) => (
                 <Tag text={tag} key={tag} />
             ))}
@@ -228,6 +248,7 @@ function InfoTag({ bgCol, text }: { bgCol: string; text: string }) {
             fontWeight={500}
             letterSpacing={1}
             borderRadius={0.5}
+            fontSize={10}
         >
             {text.toUpperCase()}
         </Box>
@@ -268,10 +289,9 @@ function Tag({ text }: { text: string }) {
             sx={{ backgroundColor: "grey" }}
             px={0.2}
             ml={0.1}
-            fontWeight={500}
-            letterSpacing={1}
+            fontWeight={400}
             borderRadius={0.4}
-            fontSize={13}
+            fontSize={10}
         >
             {/* using html button instead of MUI because I want no extra styling */}
             <button onClick={handleClick}>{text.toLowerCase()}</button>
