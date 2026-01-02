@@ -18,7 +18,8 @@ import { ReactLenis } from "@studio-freight/react-lenis";
 import { ProfileChangePswd } from "@/components/Profile";
 import { PopupProvider } from "@/shared/Popup";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import {
     BrowserRouter,
     Routes,

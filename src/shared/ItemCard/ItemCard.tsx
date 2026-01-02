@@ -18,7 +18,9 @@ import {
     MenuOptions,
     ParsedMenuOptions,
 } from "@/components/Shop/SearchBar";
-import { Link as RouterLink } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { motion } from "motion/react";
+import { Opacity } from "@mui/icons-material";
 
 /**
 ItemCard Component
@@ -74,7 +76,7 @@ export default function ItemCard(item: Item) {
             clone.style.visibility = "hidden";
             clone.style.position = "absolute";
             clone.style.width = `${parentWidth}px`;
-            clone.style.height = "auto"; // https://stackoverflow.com/a/15943054
+            clone.style.height = "auto";
             clone.innerText = descFull || "";
 
             document.body.appendChild(clone);
@@ -119,100 +121,91 @@ export default function ItemCard(item: Item) {
         }
     }, [isHovered]);
 
-    const isMeatOrPoultry = tags.includes("meat") || tags.includes("poultry");
-
     return (
-        <Card
-            sx={sx}
-            onMouseEnter={() => {
-                setIsHovered(true);
-            }}
-            onMouseLeave={() => {
-                setIsHovered(false);
-            }}
-            raised={isHovered}
-            style={{ width: "188px" }}
-            component={RouterLink}
+        <Link
             to={`/item?itemId=${id}`}
+            style={{
+                textDecoration: "none",
+                color: "inherit",
+            }}
+            onClick={(e) => {
+                // Don't navigate if clicking on a button
+                const target = e.target as HTMLElement;
+                if (target.closest('button')) {
+                    e.preventDefault();
+                }
+            }}
         >
-            <CardMedia
-                component="img"
+            <Card
                 sx={{
-                    width: "188px",
-                    height: "188px",
+                    ...sx,
+                    cursor: "pointer",
                 }}
-                image={imgUrl && imgUrl != '' ? imgUrl : `/itempics/${id}.jpg`}
-                alt={`${title} image`}
-            />
-            <CardContent sx={{ p: "10px" }} >
-                <Stack rowGap={0.4}>
-                    
-                    {/* Using HTML button instead of MUI because I want no extra styling */}
-                    <Typography
-                        variant="h5"
-                        textAlign="left"
-                        fontSize={14}
-                        sx={{
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                        }}
-                    >
-                        {title}
-                    </Typography>
-                    <Stack direction="row" justifyContent="space-between">
-                        <Price price={price} discount={discount} />
-                        <Box
-                            sx={{ backgroundColor: "#228B22" }}
-                            px={0.4}
-                            mt={0.1}
-                            fontWeight={500}
-                            letterSpacing={1}
-                            borderRadius={0.4}
-                            fontSize={10}
+                onMouseEnter={() => {
+                    setIsHovered(true);
+                }}
+                onMouseLeave={() => {
+                    setIsHovered(false);
+                }}
+                raised={isHovered}
+                style={{ width: "188px" }}
+                component={motion.div}
+                initial={{opacity: 0}}
+                animate={{opacity: 1}}
+                transition={{duration: 1.5}}
+            >
+                <CardMedia
+                    component="img"
+                    sx={{
+                        width: "188px",
+                        height: "188px",
+                    }}
+                    image={imgUrl && imgUrl != '' ? imgUrl : `/itempics/${id}.jpg`}
+                    alt={`${title} image`}
+                />
+                <CardContent sx={{ p: "10px" }} >
+                    <Stack rowGap={0.4}>
+                        <Typography
+                            variant="h5"
+                            textAlign="left"
+                            fontSize={14}
+                            sx={{
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                            }}
                         >
-                            {`SAVE ${discount}%`}
-                        </Box>        
+                            {title}
+                        </Typography>
+                        <Stack direction="row" justifyContent="space-between">
+                            <Price price={price} discount={discount} />
+                            <Box
+                                sx={{ backgroundColor: "#228B22" }}
+                                px={0.4}
+                                mt={0.1}
+                                fontWeight={500}
+                                letterSpacing={1}
+                                borderRadius={0.4}
+                                fontSize={10}
+                            >
+                                {`SAVE ${discount}%`}
+                            </Box>        
+                        </Stack>
+                        <Tags tags={tags} />
+                        <DiscountAndRating
+                            discount={discount}
+                            reviewCount={reviewCount}
+                            reviewRating={reviewRating}
+                        />
+                        <Btns
+                            isHovered={isHovered}
+                            transitionDuration={heightTransitionDuration}
+                            item={item}
+                        />
                     </Stack>
-                    {/* <Stack
-                        direction="row"
-                        justifyContent="end"
-                        flexWrap="wrap"
-                        color="white"
-                        fontSize={10}
-                        gap={0.1}
-                    >
-                        {isSpecial && <Special />}
-                        {isMeatOrPoultry && <FreeRange />}
-                        
-                        <Organic />
-                    </Stack> */}
-                    <Tags tags={tags} />
-                    {/* <Typography
-                        ref={descRef}
-                        variant="body2"
-                        color="text.secondary"
-                        id={id.toString()}
-                        sx={{
-                            transition: `height ${heightTransitionDuration}s ease-out`,
-                        }}
-                        height={descHeight}
-                    >
-                        {desc}
-                    </Typography> */}
-                    <DiscountAndRating
-                        discount={discount}
-                        reviewCount={reviewCount}
-                        reviewRating={reviewRating}
-                    />
-                    <Btns
-                        isHovered={isHovered}
-                        transitionDuration={heightTransitionDuration}
-                        item={item}
-                    />
-                </Stack>
-            </CardContent>
-        </Card>
+                </CardContent>
+            </Card>
+        </Link>
     );
 }
 
