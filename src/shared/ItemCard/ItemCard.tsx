@@ -20,7 +20,6 @@ import {
 } from "@/components/Shop/SearchBar";
 import { Link } from "react-router-dom";
 import { motion } from "motion/react";
-import { Opacity } from "@mui/icons-material";
 
 /**
 ItemCard Component
@@ -28,7 +27,7 @@ ItemCard Component
 This component displays an individual item card in the shop. It includes item details like 
 title, price, tags, discount, description, and reviews. It also handles hover state for the card.
  */
-export default function ItemCard(item: Item) {
+export default function ItemCard(item: Item & { index?: number }) {
     const [isHovered, setIsHovered] = useState(false);
 
     const {
@@ -41,7 +40,8 @@ export default function ItemCard(item: Item) {
         reviewRating,
         reviewCount,
         isSpecial,
-        imgUrl
+        imgUrl,
+        index: cardIndex = 0
     } = item;
 
     const sx: SxProps<Theme> = {
@@ -150,9 +150,13 @@ export default function ItemCard(item: Item) {
                 raised={isHovered}
                 style={{ width: "188px" }}
                 component={motion.div}
-                initial={{opacity: 0}}
-                animate={{opacity: 1}}
-                transition={{duration: 1.5}}
+                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                transition={{ 
+                    duration: 0.3,
+                    delay: Math.min(cardIndex * 0.03, 0.5), // Stagger by 30ms per card, max 0.5s delay
+                    ease: "easeOut"
+                }}
             >
                 <CardMedia
                     component="img"

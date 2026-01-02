@@ -152,9 +152,12 @@ export default function Shop() {
                             flexWrap="wrap"
                             justifyContent="center"
                         >
-                            {items.slice(0, itemsToShow).map((item: Item) => (
-                                <ItemCard key={item.id} {...item}></ItemCard>
-                            ))}
+                            {items.slice(0, itemsToShow).map((item: Item, index: number) => {
+                                // Calculate local index for the current batch (resets for each Load More)
+                                const previousBatchCount = Math.max(0, itemsToShow - ITEMS_PER_PAGE);
+                                const localIndex = index >= previousBatchCount ? index - previousBatchCount : index;
+                                return <ItemCard key={item.id} {...item} index={localIndex}></ItemCard>;
+                            })}
                         </Stack>
                         {itemsToShow < items.length && (
                             <Button
