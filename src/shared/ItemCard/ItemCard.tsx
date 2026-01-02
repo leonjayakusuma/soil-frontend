@@ -46,6 +46,7 @@ export default function ItemCard(item: Item) {
         maxWidth: 345,
         transition: "transform 0.3s ease-in",
         m: 1,
+        alignSelf: "flex-start", // Prevent card from stretching when other cards expand
         "&:hover": {
             transform: "scale(1.05)",
             zIndex: 10,
