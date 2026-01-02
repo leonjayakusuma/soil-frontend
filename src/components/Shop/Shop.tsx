@@ -1,5 +1,5 @@
 import ParallaxPage from "@/shared/ParallaxPage";
-import { Stack, Typography } from "@mui/material";
+import { Stack, Typography, Button } from "@mui/material";
 import plant1 from "@/assets/plants1.jpg";
 import { Item } from "@shared/types";
 import ItemCard, { getFinalPrice } from "@/shared/ItemCard";
@@ -31,6 +31,8 @@ updates the items state based on these parameters.
 export default function Shop() {
     const [items, setItems] = useState<Item[]>([]);
     const [response, setResponse] = useState<Res<Item[]> | undefined>();
+    const [itemsToShow, setItemsToShow] = useState<number>(12); // Initial number of items to display
+    const ITEMS_PER_PAGE = 12; // Number of items to load per "Load More" click
 
     const location = useLocation();
 
@@ -110,6 +112,8 @@ export default function Shop() {
         }
 
         setItems(tempItems);
+        // Reset items to show when filters/search change
+        setItemsToShow(ITEMS_PER_PAGE);
     }, [location.search, response?.data]);
 
     if (!response) {
@@ -142,15 +146,33 @@ export default function Shop() {
                         No search results found
                     </Typography>
                 ) : (
-                    <Stack
-                        direction="row"
-                        flexWrap="wrap"
-                        justifyContent="center"
-                    >
-                        {items.map((item: Item) => (
-                            <ItemCard key={item.id} {...item}></ItemCard>
-                        ))}
-                    </Stack>
+                    <>
+                        <Stack
+                            direction="row"
+                            flexWrap="wrap"
+                            justifyContent="center"
+                        >
+                            {items.slice(0, itemsToShow).map((item: Item) => (
+                                <ItemCard key={item.id} {...item}></ItemCard>
+                            ))}
+                        </Stack>
+                        {itemsToShow < items.length && (
+                            <Button
+                                variant="contained"
+                                onClick={() => setItemsToShow(prev => prev + ITEMS_PER_PAGE)}
+                                sx={{
+                                    mt: 4,
+                                    mb: 4,
+                                    px: 4,
+                                    py: 1.5,
+                                    fontSize: "16px",
+                                    fontWeight: 600,
+                                }}
+                            >
+                                Load More ({items.length - itemsToShow} remaining)
+                            </Button>
+                        )}
+                    </>
                 )}
             </Stack>
             <Footer />
