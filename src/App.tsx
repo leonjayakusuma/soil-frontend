@@ -81,7 +81,13 @@ type CartContextType = [
     React.Dispatch<React.SetStateAction<CartItem[]>>,
 ];
 
-export const CartContext = createContext<CartContextType | null>(null);
+type CartContextTypeWithRefresh = [
+    CartItem[],
+    React.Dispatch<React.SetStateAction<CartItem[]>>,
+    () => Promise<void>, // refreshCart function
+];
+
+export const CartContext = createContext<CartContextTypeWithRefresh | null>(null);
 
 export const useCart = () => {
     const context = useContext(CartContext);
@@ -96,32 +102,46 @@ export default function App() {
 
     const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
-    useEffect(() => {
+    // Function to fetch cart items
+    const fetchCartItems = async () => {
         const userInfo = getSOILInfo().userInfo;
         if (userInfo) {
-            getUserCart()
-                .then((res) => {
-                    if (res.data) {
-                        // Transform API cart items to include subTotal
-                        const cartItemsWithSubTotal: CartItem[] = res.data.map((item) => ({
-                            ...item,
-                            subTotal: getFinalPrice(item.item.price, item.item.discount) * item.quantity,
-                        }));
-                        setCartItems(cartItemsWithSubTotal);
-                    } else {
-                        // If no cart data, set empty array
-                        setCartItems([]);
-                    }
-                })
-                .catch((error) => {
-                    // Silently handle errors (user might not be logged in or API might not be available)
-                    console.error("Error fetching cart:", error);
+            try {
+                const res = await getUserCart();
+                if (res.data) {
+                    // Transform API cart items to include subTotal
+                    const cartItemsWithSubTotal: CartItem[] = res.data.map((item) => ({
+                        ...item,
+                        subTotal: getFinalPrice(item.item.price, item.item.discount) * item.quantity,
+                    }));
+                    setCartItems(cartItemsWithSubTotal);
+                } else {
+                    // If no cart data, set empty array
                     setCartItems([]);
-                });
+                }
+            } catch (error) {
+                // Silently handle errors (user might not be logged in or API might not be available)
+                console.error("Error fetching cart:", error);
+                setCartItems([]);
+            }
         } else {
             // User not logged in, set empty cart
             setCartItems([]);
         }
+    };
+
+    // Fetch cart on mount and listen for refresh events
+    useEffect(() => {
+        // Fetch cart on mount
+        fetchCartItems();
+
+        // Listen for custom event to refresh cart (triggered after login/logout)
+        const handleRefreshCart = () => {
+            fetchCartItems();
+        };
+
+        window.addEventListener("refreshCart", handleRefreshCart);
+        return () => window.removeEventListener("refreshCart", handleRefreshCart);
     }, []);
 
     // TODO: check if needed
@@ -159,7 +179,7 @@ export default function App() {
         <ReactLenis root>
             <ThemeProvider theme={theme}>
                 <BrowserRouter>
-                    <CartContext.Provider value={[cartItems, setCartItems]}>
+                    <CartContext.Provider value={[cartItems, setCartItems, fetchCartItems]}>
                         <PopupProvider>
                             <Navbar />
                             <AnimatedRoutes />

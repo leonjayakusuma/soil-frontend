@@ -56,6 +56,10 @@ const ProfileReadMode = ({
         if (await logOutUser()) {
             setCartItems([]);
             setSOILItem("userInfo", undefined);
+
+            // Trigger cart refresh to clear cart
+            window.dispatchEvent(new Event("refreshCart"));
+
             popup("Successfully logged out");
             navigate("/");
         } else {

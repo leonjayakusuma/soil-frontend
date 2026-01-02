@@ -54,6 +54,10 @@ export function LogIn() {
                 const displayName =
                     (response.data as { name?: string }).name ?? email;
                 popup(`Welcome ${displayName}`);
+
+                // Trigger cart refresh after login
+                window.dispatchEvent(new Event("refreshCart"));
+
                 navigate("/");
             }
         });
