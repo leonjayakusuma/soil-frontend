@@ -149,14 +149,12 @@ export default function ItemCard(item: Item) {
                     {/* Using HTML button instead of MUI because I want no extra styling */}
                     <Typography
                         variant="h5"
-                        overflow="hidden"
-                        // component={RouterLink}
-                        // to={`/item?itemId=${id}`}
                         textAlign="left"
-                        fontSize={16}
+                        fontSize={14}
                         sx={{
-                            WebkitLineClamp: "2",
-                            WebkitBoxDirection: "vertical",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
                         }}
                     >
                         {title}

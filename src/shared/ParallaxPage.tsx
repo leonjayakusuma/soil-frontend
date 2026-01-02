@@ -29,6 +29,19 @@ export default function ParallaxPage({
                 objectFit: "cover",
             }}
         >
+            {img && (
+                <Box
+                    sx={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: "rgba(0, 0, 0, 0.5)",
+                        zIndex: 0,
+                    }}
+                />
+            )}
             {vid && (
                 // https://codesandbox.io/p/sandbox/parallax-video-background-xowd0
                 <Box
@@ -68,7 +81,7 @@ export default function ParallaxPage({
                     </Box>
                 </Box>
             )}
-            <Box sx={{ ...sx, minHeight: "100vh", width: "100vw" }}>
+            <Box sx={{ ...sx, minHeight: "100vh", width: "100vw", position: "relative", zIndex: 1 }}>
                 {children}
             </Box>
         </Parallax>

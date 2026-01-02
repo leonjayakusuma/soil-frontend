@@ -158,18 +158,28 @@ export default function Shop() {
                         </Stack>
                         {itemsToShow < items.length && (
                             <Button
-                                variant="contained"
+                                variant="outlined"
                                 onClick={() => setItemsToShow(prev => prev + ITEMS_PER_PAGE)}
                                 sx={{
                                     mt: 4,
                                     mb: 4,
-                                    px: 4,
-                                    py: 1.5,
+                                    px: 1.5,
+                                    py: 0.7,
                                     fontSize: "16px",
                                     fontWeight: 600,
+                                    color: "white",
+                                    backgroundColor: "transparent",
+                                    borderColor: "primary.main",
+                                    borderWidth: "3px",
+                                    "&:hover": {
+                                        backgroundColor: "rgba(255, 255, 255, 0.15)",
+                                        // borderColor: "white",
+                                        transform: "scale(1.05)",
+                                        borderWidth: "3px",
+                                    },
                                 }}
                             >
-                                Load More ({items.length - itemsToShow} remaining)
+                                Load More
                             </Button>
                         )}
                     </>
