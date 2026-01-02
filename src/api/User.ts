@@ -140,15 +140,33 @@ export function logInUser(email: string, pswd: string) {
     >("/api/login", { email, password: pswd });
 }
 
-export function logOutUser() {
-    const successful = tryCatchHandlerAuth<
-        {
-            accessToken: string;
-        },
-        boolean
-    >("/api/logout");
+export async function logOutUser() {
+    const accessToken = getSOILInfo().userInfo?.accessToken ?? "";
+    
+    // Clear localStorage first (optimistic logout)
     localStorage.clear();
-    return successful;
+    
+    // Try to logout on server (but don't fail if it doesn't work)
+    if (accessToken) {
+        try {
+            const result = await tryCatchHandlerAuth<
+                {
+                    accessToken: string;
+                },
+                boolean
+            >("/api/protected/logout", { accessToken }, "POST");
+            
+            // Return success if server logout worked, or if it failed but we cleared local storage
+            return result.data === true || !result.isError;
+        } catch (error) {
+            // Ignore server logout errors - we've already cleared local storage
+            // Return true since we successfully cleared local storage
+            return true;
+        }
+    }
+    
+    // No access token, but we cleared local storage, so logout is successful
+    return true;
 }
 
 export function deleteLoggedInUser() {
