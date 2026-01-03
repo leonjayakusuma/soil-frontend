@@ -120,12 +120,14 @@ export function Btns({
             <Button
                 aria-label="buy"
                 size={size}
-                // variant="contained"
-                sx={{ fontSize: styles.buttonFontSize, "&:hover": { border: size === "small" ? "1.5px solid green" : "3px solid green" } }}
+                variant="text"
                 onClick={() => {
                     navigate("/checkout?id=" + item.id);
                 }}
                 color="primary"
+                sx={{ 
+                    fontSize: styles.buttonFontSize,
+                }}
             >
                 {styles.buyText}
             </Button>

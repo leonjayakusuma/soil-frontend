@@ -42,6 +42,14 @@ import TestPage from "./TestPage";
 declare module "@mui/material/styles/createPalette" {
     // https://stackoverflow.com/a/67015020
     interface PaletteColor extends ColorPartial { }
+    
+    interface Palette {
+        accent: PaletteColor;
+    }
+    
+    interface PaletteOptions {
+        accent?: PaletteColorOptions;
+    }
 }
 
 declare module "@mui/material/styles" {
@@ -58,6 +66,12 @@ export const theme = createTheme({
     palette: {
         primary: green,
         secondary: grey,
+        accent: {
+            main: "#228B22", // Forest green for buy buttons
+            light: "#32CD32",
+            dark: "#006400",
+            contrastText: "#ffffff",
+        },
     },
     typography: {
         fontFamily: "Poppins, sans-serif",
@@ -65,7 +79,29 @@ export const theme = createTheme({
     shape: {
         borderRadius: 10,
     },
-
+    components: {
+        MuiButton: {
+            styleOverrides: {
+                root: {
+                    color: "rgba(255, 255, 255, 0.87)",
+                    "& .MuiTypography-root": {
+                        color: "rgba(255, 255, 255, 0.87)",
+                    },
+                },
+                textPrimary: {
+                    // Style for text variant with primary color (buy buttons in ItemCard)
+                    color: green[600],
+                    fontWeight: 600,
+                    "&:hover": {
+                        backgroundColor: green[50],
+                        border: "1.5px solid",
+                        borderColor: green[600],
+                        // borderRadius: 1,
+                    },
+                },
+            },
+        },
+    },
     spacing: (factor: number) => `calc(var(--spacing-unit) * ${factor})`,
     fontSize: (factor: number) => `calc(var(--font-size-unit) * ${factor})`,
 });

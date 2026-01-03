@@ -34,6 +34,7 @@ export function About({
                     alignItems: "center",
                     flexGrow: 1,
                     margin: "100px",
+                    // color: "white",
                     "@media (max-width: 600px)": {
                         margin: "10px",
                         marginBottom: "50px",
@@ -81,36 +82,12 @@ export function About({
                         fontStyle="italic"
                         marginY={"20px"}
                     >
-                        That's what soil stands for. At SOIL we guarantee
-                        organic food bought directly from local farmers. We
-                        believe that the best food is the one that is grown
-                        closest to you. We are committed to providing the best
-                        quality food sourced from local Australian farms, as we
-                        are proud to support local Austrlian farmers. We support
-                        healthy cooking and eating so we provide you with
-                        gardening tips so you can get started on your own
-                        organic garden.
+                        That's what SOIL stands for. We bring you fresh, organic food 
+                        straight from local Australian farmers—because the best food 
+                        grows closest to home. Join us in supporting local farmers while 
+                        we help you grow your own organic garden.
                     </Typography>
-                    <Button
-                        variant="contained"
-                        onClick={handleScrollTo}
-                        sx={{
-                            mt: "50px",
-                            transition: "transform 0.3s ease",
-                            "&:hover": {
-                                transform: "scale(1.1)",
-                            },
-                            padding: "20px",
-                        }}
-                    >
-                        <Typography
-                            variant="h5"
-                            fontFamily={`"Open Sans", sans-serif`}
-                            fontWeight={700}
-                        >
-                            Shop Specials
-                        </Typography>
-                    </Button>
+                    <ShopSpecialsButton handleScrollTo={handleScrollTo} />
                 </Box>
                 {!isColumn && <Img />}
             </Box>
@@ -122,6 +99,34 @@ export function About({
             behavior: "smooth",
         });
     }
+}
+
+const ShopSpecialsButton = ({ handleScrollTo }: { handleScrollTo: () => void }) => {
+    return <Button
+        variant="contained"
+        onClick={handleScrollTo}
+        sx={{
+            mt: "50px",
+            transition: "transform 0.3s ease",
+            backgroundColor: "transparent",
+            border: "3px solid green",
+            "&:hover": {
+                transform: "scale(1.1)",
+                backgroundColor: "primary.main",
+                border: "0px",
+                color: "white",
+            },
+            padding: "20px",
+        }}
+    >
+        <Typography
+            variant="h5"
+            fontFamily={`"Open Sans", sans-serif`}
+            fontWeight={700}
+        >
+            Shop Specials
+        </Typography>
+    </Button>;
 }
 
 function Img() {
