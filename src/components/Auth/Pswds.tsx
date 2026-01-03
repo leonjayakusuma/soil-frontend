@@ -122,7 +122,6 @@ export function Pswds({
             handleSubmit={handleSubmit}
             title="Enter a strong password"
             authFieldProps={authFieldProps}
-            cancelBtn={cancelBtn}
             submitText={submitText}
         >
             <PswdReqList pswdReqs={pswdReqs} />

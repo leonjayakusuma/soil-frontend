@@ -91,21 +91,6 @@ export function LogIn() {
             title="Welcome back!"
             authFieldProps={authFieldProps}
             submitText="Log in"
-            cancelBtn={
-                <Button
-                    variant="contained"
-                    color="inherit"
-                    sx={{
-                        color: "rgb(100, 100, 100)",
-                    }}
-                    onClick={() => {
-                        navigate("/");
-                    }}
-                >
-                    <CloseIcon sx={{ paddingRight: "5px" }} />
-                    Cancel
-                </Button>
-            }
         >
             <Stack direction="row" alignItems="center" flexDirection="column">
                 <Typography>

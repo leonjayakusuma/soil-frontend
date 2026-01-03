@@ -6,7 +6,6 @@ import { theme } from "@/App";
 export type AuthFormPropsType = {
     useEffectFunc: () => void;
     dependancyArr: any[];
-    cancelBtn: React.ReactNode;
     submitText: string;
     handleSubmit: (e: React.SyntheticEvent) => void;
     title: string;
@@ -32,7 +31,6 @@ export function AuthForm({
     title,
     authFieldProps,
     children,
-    cancelBtn,
     submitText,
 }: AuthFormPropsType) {
     useEffect(useEffectFunc, dependancyArr);
@@ -86,7 +84,6 @@ export function AuthForm({
                 )}
                 {children}
                 <Stack direction="row" justifyContent="space-between" mt={0.7}>
-                    {cancelBtn}
                     <Button
                         type="submit"
                         variant="contained"
