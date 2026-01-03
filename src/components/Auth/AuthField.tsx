@@ -94,6 +94,10 @@ export function AuthField({
             error={error}
             helperText={correctErrorTxt}
             InputProps={inputProps}
+            sx={{
+                width: "80%",
+                alignSelf: "center",
+            }}
         />
     );
 }

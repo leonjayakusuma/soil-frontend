@@ -100,14 +100,18 @@ export function NameAndEmail({
             authFieldProps={authFieldProps}
             submitText="Next"
         >
-            <Stack direction="row" alignItems="center" flexDirection="column">
-                <Typography>
-                    Already have an account?&nbsp;
-                    <Link component={RouterLink} to="/login">
-                        Log in
-                    </Link>
-                </Typography>
-            </Stack>
+            {SignUpFooter()}
         </Auth>
     );
 }
+function SignUpFooter() {
+    return <Stack direction="row" alignItems="center" flexDirection="column">
+        <Typography>
+            Already have an account?&nbsp;
+            <Link component={RouterLink} to="/login">
+                Log in
+            </Link>
+        </Typography>
+    </Stack>;
+}
+

@@ -42,25 +42,6 @@ export function Email({ authFieldProps, paginate }: EmailProps) {
             title="Get password reset code"
             authFieldProps={authFieldProps}
             submitText="Get code"
-            cancelBtn={
-                <Button
-                    variant="contained"
-                    color="inherit"
-                    sx={{
-                        color: "rgb(100, 100, 100)",
-                        // "&:hover": {
-                        //     color: "black",
-                        //     backgroundColor: "darkgray",
-                        // },
-                    }}
-                    onClick={() => {
-                        navigate("/");
-                    }}
-                >
-                    <CloseIcon sx={{ paddingRight: "5px" }} />
-                    Cancel
-                </Button>
-            }
         >
             <Typography mb="30px">
                 Please enter your email address to send the password reset code

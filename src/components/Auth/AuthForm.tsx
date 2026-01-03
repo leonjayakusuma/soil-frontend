@@ -55,6 +55,7 @@ export function AuthForm({
                     fontSize={theme.fontSize(1.55)}
                     fontWeight="500"
                     marginBottom="30px"
+                    textAlign="center"
                 >
                     {title}
                 </Typography>
@@ -82,18 +83,20 @@ export function AuthForm({
                         );
                     },
                 )}
-                {children}
-                <Stack direction="row" justifyContent="space-between" mt={0.7}>
+                <Stack direction="row" justifyContent="center" mt={0.7} marginBottom="30px">
                     <Button
                         type="submit"
                         variant="contained"
                         sx={{
                             px: 2,
+                            py: .5,
+                            width: "80%"
                         }}
                     >
                         {submitText}
                     </Button>
                 </Stack>
+                {children}
             </FormControl>
         </Box>
     );

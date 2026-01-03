@@ -92,19 +92,25 @@ export function LogIn() {
             authFieldProps={authFieldProps}
             submitText="Log in"
         >
-            <Stack direction="row" alignItems="center" flexDirection="column">
-                <Typography>
-                    <Link component={RouterLink} to="/forgotPswd">
-                        Forgot Password?
-                    </Link>
-                </Typography>
-                <Typography>
-                    Don't have an account?&nbsp;
-                    <Link component={RouterLink} to="/signup">
-                        Sign up
-                    </Link>
-                </Typography>
-            </Stack>
+            <LoginFooter />
         </Auth>
     );
 }
+function LoginFooter() {
+    return (
+        <Stack direction="row" alignItems="center" flexDirection="column">
+            <Typography>
+                <Link component={RouterLink} to="/forgotPswd">
+                    Forgot Password?
+                </Link>
+            </Typography>
+            <Typography>
+                Don't have an account?&nbsp;
+                <Link component={RouterLink} to="/signup">
+                    Sign up
+                </Link>
+            </Typography>
+        </Stack>
+    );
+}
+
