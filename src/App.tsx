@@ -37,6 +37,7 @@ import { getSOILInfo } from "@/SoilInfo";
 import { getUserCart } from "./api";
 import { CartItem } from "@shared/types";
 import { getFinalPrice } from "@/shared/ItemCard";
+import TestPage from "./TestPage";
 
 declare module "@mui/material/styles/createPalette" {
     // https://stackoverflow.com/a/67015020
@@ -263,6 +264,10 @@ function AnimatedRoutes() {
                 <Route
                     path="/user"
                     element={<GetMotionDiv element={<UserPage />} />}
+                />
+                <Route
+                    path="/test"
+                    element={<GetMotionDiv element={<TestPage />} />}
                 />
             </Routes>
         </AnimatePresence>

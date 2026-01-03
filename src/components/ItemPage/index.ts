@@ -1,6 +1,6 @@
 export * from "./ItemPage"
 export * from "./ImgDiv"
-export * from "./InfoDiv"
+export * from "./InfoContainer"
 export * from "./ReviewDiv"
 export * from "./ReviewTxt"
 export * from "./ReviewForm"

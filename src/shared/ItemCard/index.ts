@@ -1,5 +1,5 @@
 export * from "./Btns";
-export * from "./DiscountAndRating";
+export * from "./ItemMetrics";
 export * from "./Price";
 export * from "./ItemCard";
 export { default } from "./ItemCard";

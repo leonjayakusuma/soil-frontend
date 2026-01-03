@@ -10,7 +10,7 @@ import {
     Box,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import { Price, Btns, DiscountAndRating } from "@/shared/ItemCard";
+import { Price, Btns, ItemMetrics } from "@/shared/ItemCard";
 import queryString from "query-string";
 import {
     defaultSort,
@@ -196,8 +196,8 @@ export default function ItemCard(item: Item & { index?: number }) {
                             </Box>        
                         </Stack>
                         <Tags tags={tags} />
-                        <DiscountAndRating
-                            discount={discount}
+                        <ItemMetrics
+                            // discount={discount}
                             reviewCount={reviewCount}
                             reviewRating={reviewRating}
                         />

@@ -1,12 +1,13 @@
 import { Item } from "@shared/types";
-import { Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import {
     Tags,
     Special,
     FreeRange,
     Organic,
-    DiscountAndRating,
+    ItemMetrics,
     Price,
+    Btns,
 } from "@/shared/ItemCard";
 import { useMemo } from "react";
 
@@ -27,7 +28,18 @@ import { useMemo } from "react";
  * This component uses several sub-components (Tags, Special, FreeRange, Organic, DiscountAndRating, Price) to display the item's information in a structured way.
  * The useMemo hook is imported but not used in the shown excerpt.
  */
-export function InfoDiv({
+
+export function InfoContainer({ imgPerc, data }: { imgPerc: number, data: Item }) {
+    return <Box
+        width={{ xs: "100%", md: `${100 - imgPerc}%` }}
+    >
+        <InfoDiv {...data} />
+        <Btns isHovered={true} transitionDuration={0.3} item={data} />
+    </Box>;
+}
+
+
+function InfoDiv({
     id,
     title,
     price,
@@ -48,8 +60,7 @@ export function InfoDiv({
             <Typography variant="h5" fontWeight={700} marginY={"10px"}>
                 {title}
             </Typography>
-            <DiscountAndRating
-                discount={discount}
+            <ItemMetrics
                 reviewCount={reviewCount}
                 reviewRating={reviewRating}
             />

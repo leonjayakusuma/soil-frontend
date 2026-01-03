@@ -2,11 +2,9 @@ import { Item } from "@shared/types";
 import queryString from "query-string";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { ImgDiv, InfoDiv, ReviewDiv } from ".";
+import { ItemImage, InfoContainer, ReviewDiv } from ".";
 import { Box, Container, Paper, Stack } from "@mui/material";
 import ErrorPage from "@/shared/ErrorPage";
-import ParallaxPage from "@/shared/ParallaxPage";
-import plant1 from "@/assets/plants1.jpg";
 import { getItem, getItemReviews } from "@/api/Item";
 import { Res } from "@/api";
 import LoadingPage from "@/shared/LoadingPage";
@@ -78,31 +76,10 @@ export default function ItemPage() {
     const imgPerc = 50;
 
     return (
-        <Stack width="100%" sx={{ minHeight: "100vh" }} bgcolor="white" color="black">
+        <Stack width="100vw" sx={{ minHeight: "100vh" }} bgcolor="white" color="black">
             <Container maxWidth="xl" sx={{ display: "flex", gap: 3, marginY: "100px" }}>
-                <Box
-                    sx={{
-                        width: { xs: "240px", md: "350px" },
-                        height: { xs: "240px", md: "350px" },
-                        minWidth: { xs: "240px"},
-                        flexShrink: 0,
-                        display: "flex",
-                        alignItems: "center",
-                    }}
-                >
-                    <ImgDiv
-                        imgPath={
-                            response.data.imgUrl && response.data.imgUrl != '' ?
-                                response.data.imgUrl :
-                                `/itempics/${response.data.id}.jpg`}
-                    />
-                </Box>
-                <Box
-                    width={{ xs: "100%", md: `${100 - imgPerc}%` }}
-                >
-                    <InfoDiv {...response.data} />
-                    <Btns isHovered={true} transitionDuration={0.3} item={response.data} />
-                </Box>
+                <ItemImage data={response.data} />
+                <InfoContainer imgPerc={imgPerc} data={response.data!} />
             </Container>
             {/* <Box width="100%" sx={{ px: { xs: 2, md: 3 }, pb: 3 }}> */}
             <ReviewDiv itemId={response.data.id} priorityReviewId={priorityReviewId} />
@@ -110,3 +87,5 @@ export default function ItemPage() {
         </Stack>
     );
 }
+
+
