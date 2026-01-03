@@ -14,11 +14,13 @@ export default function NumberSpinner({
   label,
   error,
   size = 'small',
+  min = 0,
   ...other
 }: BaseNumberField.Root.Props & {
   label?: React.ReactNode;
   size?: 'small' | 'medium';
   error?: boolean;
+  min?: number;
 }) {
   let id = React.useId();
   if (idProp) {
@@ -26,6 +28,7 @@ export default function NumberSpinner({
   }
   return (
     <BaseNumberField.Root
+      min={min}
       {...other}
       render={(props, state) => (
         <FormControl
@@ -115,7 +118,7 @@ export default function NumberSpinner({
                   ...props,
                   size:
                     Math.max(
-                      (other.min?.toString() || '').length,
+                      (min?.toString() || '').length,
                       state.inputValue.length || 1,
                     ) + 1,
                   sx: {
