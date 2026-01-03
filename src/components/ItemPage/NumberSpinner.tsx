@@ -14,13 +14,15 @@ export default function NumberSpinner({
   label,
   error,
   size = 'small',
-  min = 0,
+  min = 1,
+  defaultValue = 1,
   ...other
 }: BaseNumberField.Root.Props & {
   label?: React.ReactNode;
   size?: 'small' | 'medium';
   error?: boolean;
   min?: number;
+  defaultValue?: number;
 }) {
   let id = React.useId();
   if (idProp) {
@@ -29,6 +31,7 @@ export default function NumberSpinner({
   return (
     <BaseNumberField.Root
       min={min}
+      defaultValue={defaultValue}
       {...other}
       render={(props, state) => (
         <FormControl
