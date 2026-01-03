@@ -37,9 +37,6 @@ export default function ItemCard(item: Item & { index?: number }) {
         tags,
         discount,
         desc: descFull,
-        reviewRating,
-        reviewCount,
-        isSpecial,
         imgUrl,
         index: cardIndex = 0
     } = item;
@@ -54,72 +51,7 @@ export default function ItemCard(item: Item & { index?: number }) {
             zIndex: 10,
         },
     };
-
-    const [desc, setDesc] = useState("");
-    const [descHeight, setDescHeight] = useState(0);
-
-    const duration = 25;
     const heightTransitionDuration = 0.3;
-
-    const descRef = useRef<HTMLParagraphElement | null>(null);
-
-    useEffect(() => {
-        const el = descRef.current;
-
-        const parentWidth = el?.parentElement?.offsetWidth;
-
-        if (!el || !parentWidth) return;
-
-        if (isHovered) {
-            const clone = el.cloneNode(true) as HTMLElement;
-
-            clone.style.visibility = "hidden";
-            clone.style.position = "absolute";
-            clone.style.width = `${parentWidth}px`;
-            clone.style.height = "auto";
-            clone.innerText = descFull || "";
-
-            document.body.appendChild(clone);
-            setDescHeight(clone.offsetHeight);
-            document.body.removeChild(clone);
-
-            const id = setInterval(() => {
-                setDesc((prev) => {
-                    const currentDesc = prev || "";
-                    const fullDesc = descFull || "";
-                    if (currentDesc.length < fullDesc.length) {
-                        return currentDesc + fullDesc[currentDesc.length];
-                    }
-                    clearInterval(id);
-                    return currentDesc;
-                });
-            }, duration);
-
-            return () => clearInterval(id);
-        } else if (desc !== "") {
-            const id = setInterval(() => {
-                setDesc((prev) => {
-                    const currentDesc = prev || "";
-                    if (currentDesc.length > 0) {
-                        return currentDesc.substring(0, currentDesc.length - 1);
-                    }
-                    clearInterval(id);
-                    return currentDesc;
-                });
-            }, duration / 2);
-
-            const id2 = setTimeout(
-                () => setDescHeight(0),
-                heightTransitionDuration * 1000,
-            );
-
-            return () => {
-                clearInterval(id);
-                clearTimeout(id2);
-                setDescHeight(0);
-            };
-        }
-    }, [isHovered]);
 
     return (
         <Link
@@ -167,7 +99,12 @@ export default function ItemCard(item: Item & { index?: number }) {
                     image={imgUrl && imgUrl != '' ? imgUrl : `/itempics/${id}.jpg`}
                     alt={`${title} image`}
                 />
-                <CardContent sx={{ p: "10px" }} >
+                <CardContent sx={{ 
+                    padding: "10px 10px 10px 10px",
+                    "&:last-child": {
+                        paddingBottom: "10px"
+                    }
+                }} >
                     <Stack rowGap={0.4}>
                         <Typography
                             variant="h5"
@@ -196,11 +133,11 @@ export default function ItemCard(item: Item & { index?: number }) {
                             </Box>        
                         </Stack>
                         <Tags tags={tags} />
-                        <ItemMetrics
+                        {/* <ItemMetrics
                             // discount={discount}
                             reviewCount={reviewCount}
                             reviewRating={reviewRating}
-                        />
+                        /> */}
                         <Btns
                             isHovered={isHovered}
                             transitionDuration={heightTransitionDuration}

@@ -38,7 +38,7 @@ export function InfoContainer({ imgPerc, data }: { imgPerc: number, data: Item }
 
         <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
             <NumberSpinner label="Quantity" />
-            <Btns isHovered={true} transitionDuration={0.3} item={data} />
+            <Btns isHovered={true} transitionDuration={0.3} item={data} size="large" />
         </Box>
     </Box>;
 }

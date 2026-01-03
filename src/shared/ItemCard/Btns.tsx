@@ -16,10 +16,12 @@ export function Btns({
     isHovered,
     transitionDuration,
     item,
+    size = "small"
 }: {
     isHovered: boolean;
     transitionDuration: number;
     item: Item;
+    size?: "small" | "large";
 }) {
     const navigate = useNavigate();
     const popup = usePopup()!;
@@ -84,12 +86,29 @@ export function Btns({
         }
     }
 
+    const sizeStyles = {
+        small: {
+            gap: 1,
+            maxHeight: "50px",
+            buttonFontSize: "16px",
+            iconSize: "small" as const,
+        },
+        large: {
+            gap: 1.5,
+            maxHeight: "60px",
+            buttonFontSize: "20px",
+            iconSize: "medium" as const,
+        },
+    };
+
+    const styles = sizeStyles[size];
+
     return (
         <Box
             display="flex"
             justifyContent="center"
-            gap={1}
-            maxHeight={isHovered ? "50px" : 0}
+            gap={styles.gap}
+            maxHeight={isHovered ? styles.maxHeight : 0}
             overflow="hidden"
             sx={{
                 opacity: isHovered ? 1 : 0,
@@ -98,15 +117,20 @@ export function Btns({
         >
             <Button
                 aria-label="buy"
-                sx={{ fontSize: "20px" }}
+                size={size}
+                sx={{ fontSize: styles.buttonFontSize }}
                 onClick={() => {
                     navigate("/checkout?id=" + item.id);
                 }}
             >
                 Buy
             </Button>
-            <IconButton aria-label="add to cart" onClick={handleClickCart}>
-                <AddShoppingCartIcon />
+            <IconButton
+                size={size}
+                aria-label="add to cart"
+                onClick={handleClickCart}
+            >
+                <AddShoppingCartIcon fontSize={styles.iconSize} />
             </IconButton>
         </Box>
     );
