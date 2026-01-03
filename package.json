@@ -12,6 +12,7 @@
         "test:api": "tsx src/api/testApi.ts"
     },
     "dependencies": {
+        "@base-ui/react": "^1.0.0",
         "@emotion/react": "^11.11.4",
         "@emotion/styled": "^11.11.0",
         "@mui/icons-material": "^5.15.14",

@@ -10,6 +10,7 @@ import {
     Btns,
 } from "@/shared/ItemCard";
 import { useMemo } from "react";
+import NumberSpinner from "./NumberSpinner";
 
 /**
  * The InfoDiv component is a functional component that receives several props related to an item and renders information about that item.
@@ -34,7 +35,11 @@ export function InfoContainer({ imgPerc, data }: { imgPerc: number, data: Item }
         width={{ xs: "100%", md: `${100 - imgPerc}%` }}
     >
         <InfoDiv {...data} />
-        <Btns isHovered={true} transitionDuration={0.3} item={data} />
+
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <NumberSpinner label="Quantity" />
+            <Btns isHovered={true} transitionDuration={0.3} item={data} />
+        </Box>
     </Box>;
 }
 
