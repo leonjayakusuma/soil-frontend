@@ -127,6 +127,8 @@ export function Btns({
                 color="primary"
                 sx={{ 
                     fontSize: styles.buttonFontSize,
+                    "&:hover": { border: size === "small" ? "1.5px solid green" : "3px solid green"},
+                    borderRadius: 1,
                 }}
             >
                 {styles.buyText}

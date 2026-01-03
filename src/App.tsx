@@ -94,7 +94,7 @@ export const theme = createTheme({
                     fontWeight: 600,
                     "&:hover": {
                         backgroundColor: green[50],
-                        border: "1.5px solid",
+                        // border: "1.5px solid",
                         borderColor: green[600],
                         // borderRadius: 1,
                     },
