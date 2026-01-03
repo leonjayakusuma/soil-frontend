@@ -92,12 +92,14 @@ export function Btns({
             maxHeight: "50px",
             buttonFontSize: "16px",
             iconSize: "small" as const,
+            buyText: "Buy"
         },
         large: {
             gap: 1.5,
             maxHeight: "60px",
             buttonFontSize: "20px",
             iconSize: "medium" as const,
+            buyText: "Buy Now"
         },
     };
 
@@ -118,17 +120,27 @@ export function Btns({
             <Button
                 aria-label="buy"
                 size={size}
-                sx={{ fontSize: styles.buttonFontSize }}
+                // variant="contained"
+                sx={{ fontSize: styles.buttonFontSize, "&:hover": { border: size === "small" ? "1.5px solid green" : "3px solid green" } }}
                 onClick={() => {
                     navigate("/checkout?id=" + item.id);
                 }}
+                color="primary"
             >
-                Buy
+                {styles.buyText}
             </Button>
             <IconButton
                 size={size}
                 aria-label="add to cart"
                 onClick={handleClickCart}
+                sx={{ 
+                    "&:hover": { border: "1.5px solid green"},
+                    borderRadius: "50%",
+                    width: size === "small" ? "40px" : "48px",
+                    height: size === "small" ? "40px" : "48px",
+                    minWidth: size === "small" ? "40px" : "48px",
+                    padding: 0,
+                }}
             >
                 <AddShoppingCartIcon fontSize={styles.iconSize} />
             </IconButton>
