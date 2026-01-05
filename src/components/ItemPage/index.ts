@@ -1,5 +1,5 @@
 export * from "./ItemPage"
-export * from "./ImgDiv"
+export * from "./ItemImage"
 export * from "./InfoContainer"
 export * from "./ReviewDiv"
 export * from "./ReviewTxt"
