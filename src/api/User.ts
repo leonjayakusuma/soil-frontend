@@ -2,23 +2,16 @@ import { Item, ProfileInfo, UserPageInfo } from "@shared/types";
 import { tryCatchHandler, tryCatchHandlerAuth } from ".";
 import { PersonalInfo } from "@shared/types";
 import { getSOILInfo } from "@/SoilInfo";
+import { CartItem } from "@/types/domain";
 
-export type UserCode = {
-    [key: string]: string;
-};
-
-export type CartItem = {
-    item: Item;
-    quantity: number;
-};
 
 export type UserInfo = {
     name: string;
     email: string;
     pswd: string;
-    dateJoined: string;
+    // dateJoined: string;
     personalInfo?: PersonalInfo;
-    cart: CartItem[];
+    // cart: CartItem[];
 };
 
 export enum ForgotPswdErrorCodes {
