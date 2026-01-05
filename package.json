@@ -35,7 +35,8 @@
         "react-popper": "^2.3.0",
         "react-tooltip": "^5.26.3",
         "sort-by": "^0.0.2",
-        "worker-timers": "^7.1.5"
+        "worker-timers": "^7.1.5",
+        "zustand": "^5.0.9"
     },
     "devDependencies": {
         "@mui/x-data-grid-generator": "^7.1.1",
