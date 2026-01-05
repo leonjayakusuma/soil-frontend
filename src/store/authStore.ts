@@ -1,40 +1,31 @@
 import { create } from 'zustand';
-import { setSOILItem, getSOILInfo } from '@/SoilInfo';
+import { setSOILItem, getSOILInfo, SOILUserInfo } from '@/SoilInfo';
 import { logInUser, logOutUser } from '@/api/User';
 import { useCartStore } from './cartStore';
 
-interface UserInfo {
-    id: number;
-    userId: number;
-    name?: string;
-    email: string;
-    accessToken: string;
-    refreshToken: string;
-}
-
 interface AuthStore {
-    userInfo: UserInfo | null;
+    userInfo: SOILUserInfo | null;
     isAuthenticated: boolean;
     
     // Actions
     login: (email: string, password: string) => Promise<{ success: boolean; message?: string }>;
-    logout: () => void;
-    initialize: () => void;
+    logout: () => Promise<{ success: boolean; message?: string }>;
+    initialize: () => Promise<void>;
 }
 
 export const useAuthStore = create<AuthStore>((set, get) => ({
     userInfo: null,
     isAuthenticated: false,
 
-    initialize: () => {
+    initialize: async () => {
         const userInfo = getSOILInfo().userInfo;
         if (userInfo) {
             set({ 
-                userInfo: userInfo as UserInfo, 
+                userInfo: userInfo, 
                 isAuthenticated: true 
             });
             // Auto-fetch cart when user is logged in
-            useCartStore.getState().fetchCart();
+            await useCartStore.getState().fetchCart();
         } else {
             set({ userInfo: null, isAuthenticated: false });
         }
@@ -47,10 +38,9 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
                 return { success: false, message: response.msg };
             }
 
-            const userInfo: UserInfo = {
+            const userInfo: SOILUserInfo = {
                 ...response.data,
                 userId: response.data.id,
-                email: email, // Use email from login form since API doesn't return it
             };
 
             // Update localStorage
@@ -71,21 +61,35 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
     },
 
     logout: async () => {
+        const userInfo = get().userInfo;
+        let serverLogoutSuccess = true;
+        
         try {
-            const userInfo = get().userInfo;
             if (userInfo) {
-                await logOutUser();
+                // logOutUser clears localStorage internally (via localStorage.clear()) and returns boolean
+                serverLogoutSuccess = await logOutUser();
+                if (!serverLogoutSuccess) {
+                    console.warn('Server logout failed, but local logout proceeding');
+                }
+            } else {
+                // No user info, just clear local storage manually
+                setSOILItem('userInfo', undefined);
             }
         } catch (error) {
-            console.error('Logout error:', error);
-        } finally {
-            // Clear localStorage
-            setSOILItem('userInfo', undefined);
-            
-            // Clear Zustand stores
-            set({ userInfo: null, isAuthenticated: false });
-            useCartStore.getState().clearCart();
+            // localStorage operations failed, but we'll still clear Zustand state
+            console.error('Logout localStorage error (non-critical):', error);
         }
+        
+        // Clear Zustand stores (localStorage already cleared by logOutUser if userInfo existed)
+        set({ userInfo: null, isAuthenticated: false });
+        useCartStore.getState().clearCart();
+        
+        return { 
+            success: true, 
+            message: serverLogoutSuccess 
+                ? 'Successfully logged out' 
+                : 'Logged out locally (server logout may have failed)' 
+        };
     },
 }));
 

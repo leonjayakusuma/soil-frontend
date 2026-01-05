@@ -68,15 +68,15 @@ export const useCartStore = create<CartStore>((set, get) => ({
                 return { success: false, message: 'Error adding item to cart' };
             }
 
-            // Update local state
+            // Update local state - clone first, then find and modify the cloned item
             const tempCartItems = structuredClone(items);
-            if (existingItem) {
-                existingItem.quantity++;
-                existingItem.subTotal =
-                    existingItem.quantity *
-                    getFinalPrice(existingItem.item.price, existingItem.item.discount);
-                const index = tempCartItems.findIndex((ci) => ci.item.id === item.id);
-                tempCartItems[index] = existingItem;
+            const clonedExistingItem = tempCartItems.find((ci) => ci.item.id === item.id);
+            
+            if (clonedExistingItem) {
+                clonedExistingItem.quantity++;
+                clonedExistingItem.subTotal =
+                    clonedExistingItem.quantity *
+                    getFinalPrice(clonedExistingItem.item.price, clonedExistingItem.item.discount);
             } else {
                 const newCartItem: CartItem = {
                     item: {
