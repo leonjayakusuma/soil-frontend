@@ -24,7 +24,6 @@
         "card-validator": "^9.1.0",
         "dotenv": "^17.2.3",
         "localforage": "^1.10.0",
-        "luhn-js": "^1.1.2",
         "match-sorter": "^6.3.4",
         "motion": "^12.23.26",
         "papaparse": "^5.4.1",
