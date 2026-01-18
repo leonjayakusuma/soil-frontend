@@ -58,16 +58,8 @@ export function ItemImage({ data }: { data: Item }) {
         }
     };
 
-    // Ensure windowStartIndex is always valid to show exactly 3 thumbnails
+    // Calculate max start index and clamp windowStartIndex to ensure we always show exactly 3 thumbnails
     const maxStartIndex = Math.max(0, imagePaths.length - visibleThumbnails);
-    
-    // Clamp windowStartIndex to ensure we always show exactly 3 thumbnails
-    useEffect(() => {
-        if (windowStartIndex > maxStartIndex) {
-            setWindowStartIndex(maxStartIndex);
-        }
-    }, [imagePaths.length, windowStartIndex, maxStartIndex]);
-    
     const clampedWindowStartIndex = Math.min(windowStartIndex, maxStartIndex);
     
     const canSlideLeft = clampedWindowStartIndex > 0;
@@ -226,21 +218,19 @@ const SlidingWindowContainer = ({ visibleThumbnails, thumbnailWidth, thumbnailSp
 
 function ImgDiv({ imgPath }: { imgPath: string }) {
     const [imgError, setImgError] = useState(false);
-    const [imgSrc, setImgSrc] = useState(imgPath);
 
+    // Reset error state when imgPath changes to allow retrying the new image
     useEffect(() => {
-        setImgSrc(imgPath);
         setImgError(false);
     }, [imgPath]);
 
     const handleError = () => {
         setImgError(true);
-        setImgSrc(placeholderImage);
     };
 
     return (
         <img 
-            src={imgError ? placeholderImage : imgSrc} 
+            src={imgError ? placeholderImage : imgPath} 
             alt="item picture" 
             onError={handleError}
             style={{
@@ -267,16 +257,14 @@ function ThumbnailImage({
     thumbnailWidth: { xs: number; md: number };
 }) {
     const [imgError, setImgError] = useState(false);
-    const [imgSrc, setImgSrc] = useState(imgPath);
 
+    // Reset error state when imgPath changes to allow retrying the new image
     useEffect(() => {
-        setImgSrc(imgPath);
         setImgError(false);
     }, [imgPath]);
 
     const handleError = () => {
         setImgError(true);
-        setImgSrc(placeholderImage);
     };
 
     return (
@@ -305,7 +293,7 @@ function ThumbnailImage({
             }}
         >
             <img
-                src={imgError ? placeholderImage : imgSrc}
+                src={imgError ? placeholderImage : imgPath}
                 alt={`Thumbnail ${index + 1}`}
                 onError={handleError}
                 style={{

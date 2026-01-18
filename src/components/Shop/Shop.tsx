@@ -5,7 +5,7 @@ import { Item } from "@/types";
 import ItemCard, { getFinalPrice } from "@/shared/ItemCard";
 import Footer from "@/components/Footer";
 import { useLocation } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import queryString from "query-string";
 import {
     MenuOptions,
@@ -29,7 +29,6 @@ string. It also parses the search string into query, sort, and filters parameter
 updates the items state based on these parameters.
  */
 export default function Shop() {
-    const [items, setItems] = useState<Item[]>([]);
     const [response, setResponse] = useState<Res<Item[]> | undefined>();
     const [itemsToShow, setItemsToShow] = useState<number>(12); // Initial number of items to display
     const ITEMS_PER_PAGE = 12; // Number of items to load per "Load More" click
@@ -90,31 +89,24 @@ export default function Shop() {
         };
     }, []);
 
-    useEffect(() => {
+    // Compute filtered and sorted items using useMemo instead of useEffect
+    const items = useMemo(() => {
         const { q, sort, filters } = getParsedMenuOptions(location.search);
         let tempItems = [...(response?.data ?? [])];
 
-
         if (tempItems.length > 0) {
-            const beforeQuery = tempItems.length;
             tempItems = applyQuery(tempItems, q);
-            const afterQuery = tempItems.length;
-
             tempItems = applySort(tempItems, sort);
-
-            const beforeFilters = tempItems.length;
             tempItems = applyFilters(tempItems, filters);
-            const afterFilters = tempItems.length;
-
-            if (afterFilters === 0 && beforeFilters > 0) {
-                // All items filtered out - this is expected behavior, no need to log
-            }
         }
 
-        setItems(tempItems);
-        // Reset items to show when filters/search change
-        setItemsToShow(ITEMS_PER_PAGE);
+        return tempItems;
     }, [location.search, response?.data]);
+
+    // Reset items to show when filters/search change
+    useEffect(() => {
+        setItemsToShow(ITEMS_PER_PAGE);
+    }, [location.search]);
 
     if (!response) {
         return <LoadingPage />;

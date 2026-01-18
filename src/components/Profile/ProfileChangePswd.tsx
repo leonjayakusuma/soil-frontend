@@ -112,9 +112,6 @@ function ChangePswdStepComponent({
         });
     }, []);
 
-    useEffect(() => {
-        console.log(oldPassword);
-    }, [oldPassword])
 
     // if (!email) {
     //     return <></>; // Just to be safe even though isLoggedIn will be true if it reaches here

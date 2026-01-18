@@ -331,14 +331,22 @@ function FilterMinMax({
     const [min, setMin] = useState<number | undefined>();
     const [max, setMax] = useState<number | undefined>();
 
-    useEffect(() => {
-        const minMax: MinMax = {
-            min: min ?? minimum,
+    // Wrapper functions that update local state and call setMinMax
+    const handleMinChange = (newMin: number | undefined) => {
+        setMin(newMin);
+        setMinMax({
+            min: newMin ?? minimum,
             max: max ?? maximum,
-        };
+        });
+    };
 
-        setMinMax(minMax);
-    }, [min, max]);
+    const handleMaxChange = (newMax: number | undefined) => {
+        setMax(newMax);
+        setMinMax({
+            min: min ?? minimum,
+            max: newMax ?? maximum,
+        });
+    };
 
     return (
         <Stack direction="row" mt={0.5} alignItems="center" width={"100%"}>
@@ -361,7 +369,7 @@ function FilterMinMax({
                     min={minimum}
                     startVal={startVal}
                     max={(max !== undefined ? max : maximum) - 1}
-                    setNum={setMin}
+                    setNum={handleMinChange}
                 />
                 <NumericInput
                     startTxt="max"
@@ -369,7 +377,7 @@ function FilterMinMax({
                     min={(min !== undefined ? min : minimum) + 1}
                     startVal={startVal + 1}
                     max={maximum}
-                    setNum={setMax}
+                    setNum={handleMaxChange}
                 />
             </Stack>
         </Stack>
