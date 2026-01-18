@@ -16,8 +16,10 @@ export interface Item {
     imgUrl?: string;
 }
 
+export type CartItemDetails = Pick<Item, "id" | "title" | "price" | "discount" | "imgUrl">;
+
 export interface CartItem {
-    item: Item;
+    item: CartItemDetails;
     quantity: number;
     subTotal: number;
 }

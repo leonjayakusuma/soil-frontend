@@ -204,7 +204,8 @@ const SlidingWindowContainer = ({ visibleThumbnails, thumbnailWidth, thumbnailSp
             sx={{
                 transform: `translateX(-${windowStartIndex * (thumbnailWidth.md + thumbnailSpacing)}px)`,
                 transition: "transform 0.3s ease-in-out",
-                "@media (max-width: 900px)": {
+                // Use 899px to avoid conflict with Material-UI's md breakpoint at 900px
+                "@media (max-width: 899px)": {
                     transform: `translateX(-${windowStartIndex * (thumbnailWidth.xs + thumbnailSpacing)}px)`,
                 },
             }}

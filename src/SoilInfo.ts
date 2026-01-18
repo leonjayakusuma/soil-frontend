@@ -15,7 +15,7 @@ interface UnparsedItemType
     reviewCount: string;
 }
 
-type SOILUserInfo = {
+export type SOILUserInfo = {
     userId: number;
 } & Tokens;
 

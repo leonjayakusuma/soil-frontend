@@ -1,12 +1,9 @@
 import { Box, Button, IconButton } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import { CartItem, Item } from "@shared/types";
-import { getSOILInfo } from "@/SoilInfo";
-import { useCart } from "@/App";
+import { Item } from "@shared/types";
+import { useCartStore } from "@/store";
 import { useNavigate } from "react-router-dom";
-import { addItemToCart } from "@/api";
 import { usePopup } from "../Popup";
-import { getFinalPrice } from "./Price";
 
 /**
 This component handles the button actions for an item. It includes functions for adding 
@@ -25,64 +22,14 @@ export function Btns({
 }) {
     const navigate = useNavigate();
     const popup = usePopup()!;
-    const [cartItems, setCartItems] = useCart();
-    // const [, setCartItems] = useCart();
-    function handleClickCart() {
-        const tempCartItems = structuredClone(cartItems);
-        const existingItem = cartItems.find(
-            (cartItem) => cartItem.item.id === item.id,
-        ) as CartItem;
+    const addItem = useCartStore((state) => state.addItem);
 
-        if (existingItem && existingItem.quantity < 255) {
-            existingItem.quantity++;
-            existingItem.subTotal =
-                existingItem.quantity *
-                getFinalPrice(existingItem.item.price, existingItem.item.discount);
-            // cartItemAdded = existingItem;
-            tempCartItems[
-                tempCartItems.findIndex(
-                    (tempCartItem) => existingItem.item.id === tempCartItem.item.id,
-                )
-            ] = existingItem;
+    async function handleClickCart() {
+        const result = await addItem(item);
+        if (result.success) {
+            popup(result.message || `Item ${item.title} added to cart`);
         } else {
-            const newCartItem: CartItem = {
-                item: {
-                    id: item.id,
-                    title: item.title,
-                    price: item.price,
-                    discount: item.discount,
-                    imgUrl: item.imgUrl,
-                },
-                quantity: 1,
-                subTotal: item.price,
-            };
-            tempCartItems.push(newCartItem);
-        }
-
-
-
-        const loggedIn = getSOILInfo().userInfo;
-        if (loggedIn) {
-            if (existingItem && existingItem.quantity >= 255) {
-                popup("You can only buy 255 of the same item at a time.");
-            } else {
-                addItemToCart(item.id)
-                    .then((res) => {
-                        if (!res.data) {
-                            popup("Error adding item to cart");
-                            throw new Error("Error adding item to cart");
-                        }
-
-                        setCartItems(tempCartItems);
-                        popup(`Item ${item.title} added to cart`);
-                    })
-                    .catch((error) => {
-                        console.error(error);
-                    });
-            }
-            // setCartItems(tempCartItems);
-        } else {
-            popup(`Please login to buy items.`);
+            popup(result.message || "Failed to add item to cart");
         }
     }
 

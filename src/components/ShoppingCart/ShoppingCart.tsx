@@ -4,7 +4,7 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import Stack from "@mui/material/Stack";
 import { CartTotalCard, DataGridComponent } from "@/components/ShoppingCart";
-import { useCart } from "@/App";
+import { useCartStore } from "@/store";
 
 /**
 This component renders the shopping cart page. It includes a parallax background image, 
@@ -19,7 +19,7 @@ The state of the cart items is managed using the useCart custom hook. The cartIt
 variable is used to determine if the cart is empty.
  */
 export default function ShoppingCart() {
-    const [cartItems] = useCart();
+    const cartItems = useCartStore((s) => s.items);
     const cartItemsEmpty = cartItems.length === 0;
     return (
         <ParallaxPage img={plant1}>

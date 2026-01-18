@@ -6,9 +6,10 @@ import { useState, useContext } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { MenuCtx, NavbarCtx, BtnIcon } from "@/components/Navbar";
 import { Link as RouterLink } from "react-router-dom";
-import { theme, useCart } from "@/App";
+import { theme } from "@/App";
 import { CSSProperties } from "@mui/system/CSSProperties";
 import CloseIcon from "@mui/icons-material/Close";
+import { useCartStore } from "@/store";
 // import { getSOILInfo } from "@/SoilInfo";
 
 /**
@@ -56,8 +57,7 @@ export function MobileMenu({
         };
     }
 
-    const [cartItems] = useCart();
-    const cartItemsCount = cartItems.length;
+    const cartItemsCount = useCartStore((s) => s.items.length);
 
     return (
         <MenuCtx.Provider value={handleClose}>

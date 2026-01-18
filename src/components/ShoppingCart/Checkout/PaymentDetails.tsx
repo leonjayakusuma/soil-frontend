@@ -6,9 +6,9 @@ import { Box, Button, Card, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import valid from "card-validator";
-import { useCart } from "@/App";
 import { clearCart } from "@/api";
 import { usePopup } from "@/shared/Popup";
+import { useCartStore } from "@/store";
 
 /**
 This component is responsible for handling the payment information. It includes form fields for 
@@ -22,7 +22,7 @@ The state of the cart items is managed using the useCart custom hook. The useNav
  */
 export function PaymentDetails() {
     const popup = usePopup()!;
-    const [, setCartItems] = useCart();
+    const clearCartLocal = useCartStore((s) => s.clearCart);
     const [cardNumberInput, setCardNumberInput] = useState("");
     const [cardNumber, setCardNumber] = useState("");
     const [cvv, setCvv] = useState("");
@@ -80,7 +80,7 @@ export function PaymentDetails() {
                     if (!response || !response.data) {
                         throw Error("Error when clearing cart")
                     }
-                    setCartItems([]);
+                    clearCartLocal();
                     popup("Payment successful!");
                 }).catch((error) => {
                     console.error(error)

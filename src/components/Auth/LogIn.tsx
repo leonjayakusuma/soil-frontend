@@ -1,13 +1,10 @@
 import Auth from "@/components/Auth";
-import { Button, Link, Stack, Typography } from "@mui/material";
+import {Link, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import signUpBg from "@/assets/plants1.jpg";
-// import { logInErrorCodes, logInUser } from "@/Auth";
-import { logInUser } from "@/api";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import CloseIcon from "@mui/icons-material/Close";
-import { getSOILInfo, setSOILItem } from "@/SoilInfo";
 import { usePopup } from "@/shared/Popup";
+import { useAuthStore } from "@/store";
 
 /**
  * The LogIn component is a functional component that handles user login.
@@ -22,6 +19,7 @@ import { usePopup } from "@/shared/Popup";
  */
 export function LogIn() {
     const navigate = useNavigate();
+    const login = useAuthStore((state) => state.login);
 
     const [email, setEmail] = useState("");
     const [pswd, setPswd] = useState("");
@@ -30,7 +28,7 @@ export function LogIn() {
     const [emailErrorTxt, setEmailErrorTxt] = useState(" ");
     const [pswdErrorTxt, setPswdErrorTxt] = useState(" ");
 
-    const isLoggedIn = !!getSOILInfo().userInfo;
+    const isLoggedIn = useAuthStore((s) => s.isAuthenticated);
 
     const popup = usePopup()!;
 
@@ -38,29 +36,19 @@ export function LogIn() {
         if (isLoggedIn) {
             navigate("/");
         }
-    }, [isLoggedIn]);
+    }, [isLoggedIn, navigate]);
 
-    function handleSubmit(e: React.SyntheticEvent) {
+    async function handleSubmit(e: React.SyntheticEvent) {
         e.preventDefault();
-        logInUser(email, pswd).then((response) => {
-            if (!response.data || response.isError) {
-                setEmailErrorTxt(response.msg);
-                setPswdErrorTxt(response.msg);
-            } else {
-                setSOILItem("userInfo", {
-                    ...response.data,
-                    userId: response.data.id,
-                });
-                const displayName =
-                    (response.data as { name?: string }).name ?? email;
-                popup(`Welcome ${displayName}`);
-
-                // Trigger cart refresh after login
-                window.dispatchEvent(new Event("refreshCart"));
-
-                navigate("/");
-            }
-        });
+        const result = await login(email, pswd);
+        if (result.success) {
+            popup(result.message || "Login successful");
+            navigate("/");
+        } else {
+            popup(result.message || "Login failed");
+            setEmailErrorTxt(result.message || "Login failed");
+            setPswdErrorTxt(result.message || "Login failed");
+        }
     }
 
     const authFieldProps = [

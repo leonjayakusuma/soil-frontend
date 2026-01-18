@@ -29,15 +29,9 @@ import {
 } from "react-router-dom";
 import {
     useEffect,
-    useState,
-    createContext,
-    useContext,
 } from "react";
-import { getSOILInfo } from "@/SoilInfo";
-import { getUserCart } from "./api";
-import { CartItem } from "@shared/types";
-import { getFinalPrice } from "@/shared/ItemCard";
 import TestPage from "./TestPage";
+import { useAuthStore } from "@/store";
 
 declare module "@mui/material/styles/createPalette" {
     // https://stackoverflow.com/a/67015020
@@ -110,77 +104,13 @@ function onAppStart() {
     // App initialization
 }
 
-// Needed for when login is checked for dynamic changes
-// Signup and login doesn't use this and instead checks it every time it's mounted
-// This is a design choice as most signup pages don't auto redirect when loggin in from another tab
-
-type CartContextType = [
-    CartItem[],
-    React.Dispatch<React.SetStateAction<CartItem[]>>,
-];
-
-type CartContextTypeWithRefresh = [
-    CartItem[],
-    React.Dispatch<React.SetStateAction<CartItem[]>>,
-    () => Promise<void>, // refreshCart function
-];
-
-export const CartContext = createContext<CartContextTypeWithRefresh | null>(null);
-
-export const useCart = () => {
-    const context = useContext(CartContext);
-    if (!context) {
-        throw new Error("useCart must be used within a CartProvider");
-    }
-    return context;
-};
-
 export default function App() {
     // https://github.com/darkroomengineering/lenis/tree/main/packages/react-lenis
+    const initializeAuth = useAuthStore((s) => s.initialize);
 
-    const [cartItems, setCartItems] = useState<CartItem[]>([]);
-
-    // Function to fetch cart items
-    const fetchCartItems = async () => {
-        const userInfo = getSOILInfo().userInfo;
-        if (userInfo) {
-            try {
-                const res = await getUserCart();
-                if (res.data) {
-                    // Transform API cart items to include subTotal
-                    const cartItemsWithSubTotal: CartItem[] = res.data.map((item) => ({
-                        ...item,
-                        subTotal: getFinalPrice(item.item.price, item.item.discount) * item.quantity,
-                    }));
-                    setCartItems(cartItemsWithSubTotal);
-                } else {
-                    // If no cart data, set empty array
-                    setCartItems([]);
-                }
-            } catch (error) {
-                // Silently handle errors (user might not be logged in or API might not be available)
-                console.error("Error fetching cart:", error);
-                setCartItems([]);
-            }
-        } else {
-            // User not logged in, set empty cart
-            setCartItems([]);
-        }
-    };
-
-    // Fetch cart on mount and listen for refresh events
     useEffect(() => {
-        // Fetch cart on mount
-        fetchCartItems();
-
-        // Listen for custom event to refresh cart (triggered after login/logout)
-        const handleRefreshCart = () => {
-            fetchCartItems();
-        };
-
-        window.addEventListener("refreshCart", handleRefreshCart);
-        return () => window.removeEventListener("refreshCart", handleRefreshCart);
-    }, []);
+        initializeAuth();
+    }, [initializeAuth]);
 
     // TODO: check if needed
     // useEffect(() => {
@@ -217,12 +147,10 @@ export default function App() {
         <ReactLenis root>
             <ThemeProvider theme={theme}>
                 <BrowserRouter>
-                    <CartContext.Provider value={[cartItems, setCartItems, fetchCartItems]}>
-                        <PopupProvider>
-                            <Navbar />
-                            <AnimatedRoutes />
-                        </PopupProvider>
-                    </CartContext.Provider>
+                    <PopupProvider>
+                        <Navbar />
+                        <AnimatedRoutes />
+                    </PopupProvider>
                 </BrowserRouter>
             </ThemeProvider>
         </ReactLenis>
