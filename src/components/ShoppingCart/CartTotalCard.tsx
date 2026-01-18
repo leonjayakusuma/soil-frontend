@@ -1,4 +1,3 @@
-import { useCart } from "@/App";
 import {
     Button,
     Card,
@@ -22,6 +21,7 @@ import {
     Item
 } from "@shared/types";
 import { useEffect } from "react";
+import { useCartStore } from "@/store";
 // import { getAllItems } from "@/api";
 
 /**
@@ -38,7 +38,7 @@ import { useEffect } from "react";
  * useNavigate hook from 'react-router-dom' to programmatically navigate to different routes.
  */
 export function CartTotalCard({ hasAction = false }: { hasAction?: boolean }) {
-    const [localCartItems] = useCart();
+    const localCartItems = useCartStore((s) => s.items);
 
     const [item, setItem] = useState<Item | null>(null);
 

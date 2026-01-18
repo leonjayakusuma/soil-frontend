@@ -3,9 +3,8 @@ import {Link, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import signUpBg from "@/assets/plants1.jpg";
 import { useNavigate, Link as RouterLink } from "react-router-dom";
-import { getSOILInfo } from "@/SoilInfo";
 import { usePopup } from "@/shared/Popup";
-import { useAuthStore } from "@/store/authStore";
+import { useAuthStore } from "@/store";
 
 /**
  * The LogIn component is a functional component that handles user login.
@@ -29,7 +28,7 @@ export function LogIn() {
     const [emailErrorTxt, setEmailErrorTxt] = useState(" ");
     const [pswdErrorTxt, setPswdErrorTxt] = useState(" ");
 
-    const isLoggedIn = !!getSOILInfo().userInfo;
+    const isLoggedIn = useAuthStore((s) => s.isAuthenticated);
 
     const popup = usePopup()!;
 
@@ -37,7 +36,7 @@ export function LogIn() {
         if (isLoggedIn) {
             navigate("/");
         }
-    }, [isLoggedIn]);
+    }, [isLoggedIn, navigate]);
 
     async function handleSubmit(e: React.SyntheticEvent) {
         e.preventDefault();

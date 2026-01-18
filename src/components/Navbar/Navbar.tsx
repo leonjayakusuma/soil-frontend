@@ -7,7 +7,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { MobileMenu, DesktopMenu } from "@/components/Navbar";
 import { SearchBar } from "@/components/Shop";
-import { getSOILInfo } from "@/SoilInfo";
+import { useAuthStore } from "@/store";
 
 export type NavBarStyles = {
     boxStyle: SxProps<Theme>;
@@ -32,7 +32,7 @@ components in the navigation bar. The NavbarCtx and MenuCtx contexts are used to
 these styles and a function to toggle the mobile menu to the child components.
  */
 export default function NavBar() {
-    const isLoggedIn = !!getSOILInfo().userInfo;
+    const isLoggedIn = useAuthStore((s) => s.isAuthenticated);
 
     const path = useLocation().pathname;
 

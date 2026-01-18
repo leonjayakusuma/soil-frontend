@@ -5,15 +5,14 @@ import {
 import ShoppingCart from '../src/components/ShoppingCart/ShoppingCart';
 // import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
-import { CartContext } from '@/App';
 import { BrowserRouter } from 'react-router-dom';
 // import {CartContext.Provider} from '@/App';
+import { useCartStore } from '@/store';
 
 import {
     describe,
     it,
     expect,
-    vitest
 } from "vitest";
 
 // const CustomTestShoppingCart = 
@@ -29,15 +28,15 @@ const mockCartItems = [
     }
 ];
 
-const mockSetCartItems = vitest.fn();
-
 describe('ShoppingCart', () => {
     it('renders ShoppingCart component', async () => {
+        useCartStore.setState({
+            items: mockCartItems as any,
+        });
+
         await render(
             <BrowserRouter>
-                <CartContext.Provider value={[mockCartItems, mockSetCartItems]}>
-                    <ShoppingCart />
-                </CartContext.Provider>
+                <ShoppingCart />
             </BrowserRouter>
 
         );

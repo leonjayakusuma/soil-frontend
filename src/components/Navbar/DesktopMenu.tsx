@@ -4,7 +4,7 @@ import { Box, Button, Typography } from "@mui/material";
 import { useContext } from "react";
 import { NavbarCtx, BtnIcon } from "@/components/Navbar";
 import { Link as RouterLink } from "react-router-dom";
-import { useCart } from "@/App";
+import { useCartStore } from "@/store";
 
 /**
 This component renders the desktop version of the navigation menu. It includes links to 
@@ -28,8 +28,7 @@ export function DesktopMenu({
     fixed?: boolean;
 }) {
     const styles = useContext(NavbarCtx)!;
-    const [cartItems] = useCart();
-    const itemsCount = cartItems.length;
+    const itemsCount = useCartStore((s) => s.items.length);
 
     let finalSx = styles.boxStyle;
     if (fixed) {
