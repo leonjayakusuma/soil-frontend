@@ -36,28 +36,9 @@ to different routes, and the useCart custom hook to access the state of the cart
 
 */
 export default function ProfilePage() {
-    // function saveUserLocalStorage(
-    //     oldUserObject: UserInfo,
-    //     newUserObject: UserInfo,
-    // ) {
-    //     const userToUpdateIndex = users.findIndex(
-    //         (user: UserInfo) => user.email === oldUserObject.email,
-    //     );
-    //     console.log(userToUpdateIndex);
-    //     if (userToUpdateIndex !== -1) {
-    //         users[userToUpdateIndex] = newUserObject;
-    //     }
-    //     setSOILItem("user", newUserObject);
-    //     setOldUserObject(newUserObject);
-    //     setSOILItem("users", users);
-    // }
-
     const navigate = useNavigate();
     const userInfo = getSOILInfo().userInfo;
-    // const [cartItems] = useCart();
 
-
-    // console.log(getSOILInfo())
 
     useLayoutEffect(() => {
         const isLoggedIn = !!userInfo;
@@ -66,26 +47,16 @@ export default function ProfilePage() {
         }
     }, []); // Empty dependancy array as it causes navigational issues
 
-    // const user = useMemo(() => getSOILInfo().userInfo, []);
-    // const users = useMemo(() => getSOILInfo().users, []);
-    // const [profileInfo, setProfileInfo] = useState<ProfileInfo | undefined>(undefined);
-    // const defaultUsername = profileInfo?.name ?? "";
-    // const defaultEmail = profileInfo?.email ?? "";
-    // const dateJoined = profileInfo?.dateJoined ?? "";
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [dateJoined, setDateJoined] = useState("");
-    // const [id, setPswd] = useState(defaultId);
     const [isEditing, setIsEditing] = useState(false);
 
     useEffect(() => {
-        // const accessToken = userInfo?.accessToken ? userInfo.accessToken : "";
-        // console.log(accessToken);
         getProfileInfo().then((data) => {
             if (!data.data) {
                 throw new Error(data.msg);
             }
-            // setProfileInfo(data.data);
             setUsername(data.data.name);
             setEmail(data.data.email);
             setDateJoined(data.data.dateJoined);
@@ -93,32 +64,14 @@ export default function ProfilePage() {
     }, []);
 
 
-    // const [oldUserObject, setOldUserObject] = useState<ProfileInfo>({
-    //     name: defaultUsername,
-    //     email: defaultEmail,
-    //     id: id,
-    //     dateJoined
-    // });
 
     function handleSaveProfileData(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
 
-        // const newUserObject: UserInfo = {
-        //     name: username,
-        //     email,
-        //     pswd,
-        //     dateJoined,
-        //     cart: cartItems,
-        // };
-        // saveUserLocalStorage(oldUserObject, newUserObject);
         updateBasicUserInfo(username, email);
         setIsEditing(false);
     }
 
-    // In the initial rendering, don't show anything if logged out
-    // if (user === undefined) {
-    //     return <></>;
-    // }
 
     return (
         <Stack

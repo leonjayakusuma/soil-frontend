@@ -5,16 +5,11 @@ import {
     GridColDef,
     GridRowId,
 } from "@mui/x-data-grid";
-// import { CartItemType } from "@/Items";
 import DeleteIcon from "@mui/icons-material/Delete";
-import {
-    getSOILInfo,
-    //  setSOILItem
-} from "@/SoilInfo";
-import { useCart } from "@/App";
 import { getFinalPrice } from "@/shared/ItemCard";
 import { CartItem } from "@shared/types";
-import { deleteItemFromCart, updateItemQuantityFromCart } from "@/api";
+import { useCallback } from "react";
+import { useCartStore } from "@/store";
 
 /**
 This component displays a data grid of cart items. It uses the DataGrid component from 
@@ -28,43 +23,36 @@ item with the given id from the cart items and updates the state.
 The processRowUpdate function is used to update a row in the data grid.
  */
 export function DataGridComponent() {
-    const [cartItems, setCartItems] = useCart();
-    const handleDeleteClick = (id: GridRowId) => () => {
-        const itemsTemp = cartItems.filter((cartItem) => cartItem.item.id !== id);
-        const loggedIn = !!getSOILInfo().userInfo;
-        if (loggedIn) {
-            // loggedIn.cart = itemsTemp;
-            // setSOILItem("user", loggedIn);
-            deleteItemFromCart(id as number).then((res) => {
-                if (!res.data) {
-                    // console.log("Error deleting item from cart");
-                    throw new Error("Error deleting item from cart");
-                }
-                setCartItems(itemsTemp);
-            }).catch((error) => {
-                console.error(error);
-            });
-        }
-    };
+    const cartItems = useCartStore((s) => s.items);
+    const deleteItem = useCartStore((s) => s.deleteItem);
+    const updateQuantity = useCartStore((s) => s.updateQuantity);
 
-    const processRowUpdate = (newRow: CartItem) => {
-        const updatedRow = { ...newRow };
-        // console.log(updatedRow);
-        updatedRow.subTotal =
-            getFinalPrice(updatedRow.item.price, updatedRow.item.discount) *
-            updatedRow.quantity;
-        const itemsTemp = cartItems.map((cartItem) =>
-            cartItem.item.id === newRow.item.id ? updatedRow : cartItem,
-        );
-        const loggedIn = !!getSOILInfo().userInfo;
-        if (loggedIn) {
-            // loggedIn.cart = itemsTemp;
-            // setSOILItem("user", loggedIn);
-            updateItemQuantityFromCart(updatedRow.item.id, updatedRow.quantity);
-            setCartItems(itemsTemp);
-        }
-        return updatedRow;
-    };
+    const handleDeleteClick = useCallback(
+        (id: GridRowId) => async () => {
+            await deleteItem(id as number);
+        },
+        [deleteItem],
+    );
+
+    const processRowUpdate = useCallback(
+        async (newRow: CartItem) => {
+            const nextQuantity = Number(newRow.quantity);
+            if (!Number.isFinite(nextQuantity) || nextQuantity < 1) {
+                throw new Error("Quantity must be >= 1");
+            }
+
+            await updateQuantity(newRow.item.id, nextQuantity);
+
+            return {
+                ...newRow,
+                quantity: nextQuantity,
+                subTotal:
+                    getFinalPrice(newRow.item.price, newRow.item.discount) *
+                    nextQuantity,
+            };
+        },
+        [updateQuantity],
+    );
 
     const columns: GridColDef<CartItem>[] = [
         {
@@ -152,5 +140,4 @@ export function DataGridComponent() {
             />
         </Box>
     );
-    0;
 }

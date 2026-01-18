@@ -2,14 +2,13 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 // import { AuthField } from "../Auth/AuthField";
 import Button from "@mui/material/Button";
-import { theme, useCart } from "@/App";
+import { theme } from "@/App";
 import { DeleteDialog } from "./DeleteDialog";
 import { useNavigate } from "react-router-dom";
 // import { logoutUser } from "@/Auth";
 // import { useContext } from "react";
 import { usePopup } from "@/shared/Popup";
-import { setSOILItem } from "@/SoilInfo";
-import { logOutUser } from "@/api/User";
+import { useAuthStore } from "@/store";
 // import { ProfileInfo } from "@shared/types";
 
 interface ProfileReadModeProps {
@@ -46,24 +45,19 @@ const ProfileReadMode = ({
     setIsEditing,
 }: ProfileReadModeProps) => {
     const navigate = useNavigate();
-    const [, setCartItems] = useCart();
+    const logout = useAuthStore((state) => state.logout);
     const popup = usePopup()!;
 
     // console.log(username);
     // console.log(profileInfo);
 
-    async function logout() {
-        if (await logOutUser()) {
-            setCartItems([]);
-            setSOILItem("userInfo", undefined);
-
-            // Trigger cart refresh to clear cart
-            window.dispatchEvent(new Event("refreshCart"));
-
-            popup("Successfully logged out");
+    async function handleLogout() {
+        const result = await logout();
+        if (result.success) {
+            popup(result.message || "Successfully logged out");
             navigate("/");
         } else {
-            popup("Something went wrong trying to logout");
+            popup(result.message || "Something went wrong trying to logout");
         }
     }
     return (
@@ -162,7 +156,7 @@ const ProfileReadMode = ({
                 }}
                 color="secondary"
                 // untested
-                onClick={logout}
+                onClick={handleLogout}
             >
                 Log out
             </Button>
@@ -174,7 +168,7 @@ const ProfileReadMode = ({
                     backgroundColor: theme.palette.secondary[400],
                 }}
             />
-            <DeleteDialog logout={logout}></DeleteDialog>
+            <DeleteDialog logout={handleLogout}></DeleteDialog>
         </Box>
     );
 };

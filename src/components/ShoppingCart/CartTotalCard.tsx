@@ -1,4 +1,3 @@
-import { useCart } from "@/App";
 import {
     Button,
     Card,
@@ -9,7 +8,6 @@ import {
     Typography,
 } from "@mui/material";
 import {
-    // useLocation,
     useNavigate
 } from "react-router-dom";
 import queryString from "query-string";
@@ -17,14 +15,13 @@ import {
     // useMemo,
     useState
 } from "react";
-// import { getSOILInfo } from "@/SoilInfo";
 import { getFinalPrice } from "@/shared/ItemCard";
 import { getItem } from "@/api";
 import {
-    // CartItem,
     Item
 } from "@shared/types";
 import { useEffect } from "react";
+import { useCartStore } from "@/store";
 // import { getAllItems } from "@/api";
 
 /**
@@ -41,15 +38,7 @@ import { useEffect } from "react";
  * useNavigate hook from 'react-router-dom' to programmatically navigate to different routes.
  */
 export function CartTotalCard({ hasAction = false }: { hasAction?: boolean }) {
-    const [localCartItems] = useCart();
-
-    // const allItems = useMemo(() => {
-    //     // getAllItems()
-    //     console.log("All Items: ", getSOILInfo().items);
-    //     return getSOILInfo().items
-    // }, []);
-
-    // const location = useLocation();
+    const localCartItems = useCartStore((s) => s.items);
 
     const [item, setItem] = useState<Item | null>(null);
 
@@ -69,26 +58,6 @@ export function CartTotalCard({ hasAction = false }: { hasAction?: boolean }) {
         }
 
     }, []);
-
-    // const item = useMemo(() => {
-    //     const params = queryString.parse(window.location.search);
-
-    //     const itemId = parseInt((params.id ?? "") as string); // Because it won't be an array, if it is it would be NaN so no issue
-    //     // console.log(itemId);
-    //     // const itemFound = allItems.find((item) => item.id === itemId);
-    //     let itemFound: Item;
-    //     getItem(itemId).then((res) => {
-    //         if (!res.data) {
-    //             throw new Error("Error: cannot fetch item data")
-    //             // itemFound = res.data;
-    //         }
-    //         itemFound = res.data;
-    //     }).catch((error) => {
-    //         console.error(error);
-    //     })
-    //     // console.log(itemFound);
-    //     return itemFound;
-    // }, [location.search]);
 
     let cartItems = localCartItems;
 
