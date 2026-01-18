@@ -1,4 +1,4 @@
-import { Item } from "@shared/types";
+import { Item } from "@/types";
 import { Box, Stack, Typography } from "@mui/material";
 import {
     Tags,

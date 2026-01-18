@@ -6,7 +6,7 @@ import {
     SelectChangeEvent,
 } from "@mui/material";
 import { useContext } from "react";
-import { PersonalInfo } from "@shared/types";
+import { PersonalInfo } from "@/types";
 
 /**
 This component handles the dropdown selection fields in the personal information form for the user's planner. 

@@ -10,7 +10,7 @@ import LoadingPage from "@/shared/LoadingPage";
 import { usePopup } from "@/shared/Popup";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Box, Button, Paper, Stack, Typography } from "@mui/material";
-import { UserPageInfo } from "@shared/types";
+import { UserPageInfo } from "@/types";
 import queryString from "query-string";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";

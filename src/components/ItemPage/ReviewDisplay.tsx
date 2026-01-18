@@ -17,7 +17,7 @@ import {
     Box,
 } from "@mui/material";
 import PersonIcon from "@mui/icons-material/Person";
-import { Review } from "@shared/types";
+import { Review } from "@/types";
 import LoadingPage from "@/shared/LoadingPage";
 import { getSOILInfo } from "@/SoilInfo";
 import { Link as RouterLink } from "react-router-dom";

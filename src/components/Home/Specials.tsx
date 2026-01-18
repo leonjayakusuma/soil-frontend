@@ -6,7 +6,7 @@ import { Typography } from "@mui/material";
 import { getSOILInfo } from "@/SoilInfo";
 import { useEffect, useMemo, useState } from "react";
 import { getSpecials } from "@/api";
-import { Item } from "@shared/types";
+import { Item } from "@/types";
 
 /**
  * The Specials component is a functional component that displays all the special items.

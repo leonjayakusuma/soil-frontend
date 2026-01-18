@@ -8,7 +8,7 @@ import {
     Link,
     Typography,
 } from "@mui/material";
-import { Review } from "@shared/types";
+import { Review } from "@/types";
 import { createReview } from "@/api";
 import { usePopup } from "@/shared/Popup";
 import { getSOILInfo } from "@/SoilInfo";

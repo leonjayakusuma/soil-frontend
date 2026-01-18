@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { CartItem, Item } from '@/shared/types';
+import { CartItem, Item } from '@/types';
 import { getUserCart, addItemToCart, updateItemQuantityFromCart, deleteItemFromCart } from '@/api/User';
 import { getSOILInfo } from '@/SoilInfo';
 import { getFinalPrice } from '@/shared/ItemCard/Price';

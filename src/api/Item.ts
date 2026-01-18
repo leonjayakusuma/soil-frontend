@@ -1,5 +1,5 @@
 import { tryCatchHandler, tryCatchHandlerAuth } from ".";
-import { Item, Recipe, Review } from "@shared/types";
+import { Item, Recipe, Review } from "@/types";
 
 export function getSpecials() {
     return tryCatchHandler<unknown, Item[]>("/api/specials", undefined, "GET");

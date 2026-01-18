@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 // import { useContext } from "react";
 import { usePopup } from "@/shared/Popup";
 import { useAuthStore } from "@/store";
-// import { ProfileInfo } from "@shared/types";
+// import { ProfileInfo } from "@/types";
 
 interface ProfileReadModeProps {
     username: string;

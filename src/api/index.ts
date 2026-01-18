@@ -1,9 +1,8 @@
 import { getSOILInfo, setSOILItem } from "@/SoilInfo";
-import { Tokens } from "@shared/types";
+import { Tokens } from "@/types";
 
 export * from "./Item";
 export * from "./User";
-export * from "./testApi";
 
 // Request deduplication: prevent multiple simultaneous requests to the same URL
 const pendingRequests = new Map<string, Promise<Res<any>>>();

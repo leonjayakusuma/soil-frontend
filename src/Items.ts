@@ -1,10 +1,5 @@
 import { parse as csvParse } from "papaparse";
-import { Item } from "@shared/types";
-
-export interface CartItemType extends Item {
-    quantity: number;
-    subTotal: number;
-}
+import { Item } from "@/types";
 
 interface CSVRowType extends Omit<Item, "tags"> {
     tags: string;

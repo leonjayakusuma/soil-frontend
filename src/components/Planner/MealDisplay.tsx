@@ -1,4 +1,4 @@
-import { Recipe } from "@shared/types";
+import { Recipe } from "@/types";
 import { DayMeal } from "@/components/Planner";
 import {
     Pagination,

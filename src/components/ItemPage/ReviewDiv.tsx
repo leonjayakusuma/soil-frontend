@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Box } from "@mui/material";
-import { Review } from "@shared/types";
+import { Review } from "@/types";
 import { getItemReviews } from "@/api";
 import { usePopup } from "@/shared/Popup";
 import { ReviewDisplay, ReviewForm } from ".";

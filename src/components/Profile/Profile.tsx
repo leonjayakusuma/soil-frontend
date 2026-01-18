@@ -18,7 +18,7 @@ import ProfileEditMode from "./ProfileEditMode";
 import ProfileReadMode from "./ProfileReadMode";
 // import { useCart } from "@/App";
 import { getProfileInfo, updateBasicUserInfo } from "@/api";
-// import { ProfileInfo } from "@shared/types";
+// import { ProfileInfo } from "@/types";
 
 /**
 

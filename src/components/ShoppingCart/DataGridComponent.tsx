@@ -7,7 +7,7 @@ import {
 } from "@mui/x-data-grid";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { getFinalPrice } from "@/shared/ItemCard";
-import { CartItem } from "@shared/types";
+import { CartItem } from "@/types";
 import { useCallback } from "react";
 import { useCartStore } from "@/store";
 

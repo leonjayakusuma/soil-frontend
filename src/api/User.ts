@@ -1,8 +1,6 @@
-import { Item, ProfileInfo, UserPageInfo } from "@shared/types";
+import { CartItem, Item, PersonalInfo, ProfileInfo, UserPageInfo } from "@/types";
 import { tryCatchHandler, tryCatchHandlerAuth } from ".";
-import { PersonalInfo } from "@shared/types";
 import { getSOILInfo } from "@/SoilInfo";
-import { CartItem } from "@/types/domain";
 
 
 export type UserInfo = {

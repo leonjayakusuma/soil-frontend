@@ -11,7 +11,7 @@ import { NumInput, SexChip, DD } from "@/components/Personalinfo";
 import ParallaxPage from "@/shared/ParallaxPage";
 import plant1 from "@/assets/plants1.jpg";
 import { usePopup } from "@/shared/Popup";
-import { PersonalInfo } from "@shared/types";
+import { PersonalInfo } from "@/types";
 import { Res, getPersonalInfo, updatePersonalInfo } from "@/api";
 import LoadingPage from "@/shared/LoadingPage";
 import ErrorPage from "@/shared/ErrorPage";

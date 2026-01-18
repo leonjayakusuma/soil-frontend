@@ -1,4 +1,4 @@
-import { Item } from "@shared/types";
+import { Item } from "@/types";
 import queryString from "query-string";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";

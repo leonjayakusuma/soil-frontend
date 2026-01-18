@@ -1,7 +1,7 @@
 import ParallaxPage from "@/shared/ParallaxPage";
 import { Stack, Typography, Button } from "@mui/material";
 import plant1 from "@/assets/plants1.jpg";
-import { Item } from "@shared/types";
+import { Item } from "@/types";
 import ItemCard, { getFinalPrice } from "@/shared/ItemCard";
 import Footer from "@/components/Footer";
 import { useLocation } from "react-router-dom";

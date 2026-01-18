@@ -10,19 +10,13 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Link as RouterLink } from "react-router-dom";
 import { MealDuration, MealDisplay } from "@/components/Planner";
-import { PersonalInfo } from "@shared/types";
-import { Recipe } from "@shared/types";
+import { PersonalInfo, Recipe } from "@/types";
 import { usePopup } from "@/shared/Popup";
 import { Res, getAllRecipes, getPersonalInfo } from "@/api";
 import LoadingPage from "@/shared/LoadingPage";
 import ErrorPage from "@/shared/ErrorPage";
 import { defaultPersonalInfo } from "../Personalinfo";
-
-export type DayMeal = {
-    breakfast: Recipe;
-    lunch: Recipe;
-    dinner: Recipe;
-};
+import { DayMeal, mealDurations } from "./types";
 
 // type WeekMeal = {
 //     day1: MealInfo;
@@ -33,11 +27,6 @@ export type DayMeal = {
 //     day6: MealInfo;
 //     day7: MealInfo;
 // }; // Using this instead of an array for clarity
-
-export enum mealDurations {
-    daily = 1,
-    weekly = 7,
-}
 
 /** Showcases the meal plan and the settings to generate a meal plan */
 export default function Planner() {

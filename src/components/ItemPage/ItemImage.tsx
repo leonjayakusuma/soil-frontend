@@ -5,7 +5,7 @@
  * This ensures that the image will scale to fit its container while maintaining its aspect ratio, and that it will be displayed with rounded corners.
  */
 
-import { Item } from "@/shared/types";
+import { Item } from "@/types";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import IconButton from "@mui/material/IconButton";

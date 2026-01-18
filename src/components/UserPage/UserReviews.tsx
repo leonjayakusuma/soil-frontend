@@ -11,7 +11,7 @@ import {
     TextField,
     Typography,
 } from "@mui/material";
-import { UserReview } from "@shared/types";
+import { UserReview } from "@/types";
 import { ReviewTxt } from "@/components/ItemPage";
 import { useState } from "react";
 import { Link as RouterLink } from "react-router-dom";

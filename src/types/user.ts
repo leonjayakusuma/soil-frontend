@@ -25,6 +25,7 @@ export interface UserPageInfo {
 export interface ProfileInfo {
     name: string;
     email: string;
-    pswd: string;
-    personalInfo?: PersonalInfo;
+    dateJoined: string;
+    // Allow additional properties from the API without losing type safety
+    [key: string]: unknown;
 }

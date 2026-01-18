@@ -1,6 +1,6 @@
 import { Box, Button, IconButton } from "@mui/material";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import { Item } from "@shared/types";
+import { Item } from "@/types";
 import { useCartStore } from "@/store";
 import { useNavigate } from "react-router-dom";
 import { usePopup } from "../Popup";

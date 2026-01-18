@@ -19,7 +19,7 @@ import { getFinalPrice } from "@/shared/ItemCard";
 import { getItem } from "@/api";
 import {
     Item
-} from "@shared/types";
+} from "@/types";
 import { useEffect } from "react";
 import { useCartStore } from "@/store";
 // import { getAllItems } from "@/api";

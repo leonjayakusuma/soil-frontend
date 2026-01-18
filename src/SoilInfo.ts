@@ -1,7 +1,4 @@
-// import { UserInfo, UserCode } from "@/Auth";
-import { CartItemType } from "@/Items";
-import { Item } from "@shared/types";
-import { Tokens } from "@shared/types";
+import { Item, Tokens } from "@/types";
 
 interface UnparsedItemType
     extends Omit<
@@ -24,7 +21,6 @@ interface SoilInfo {
     // userCodes?: UserCode;
     // users: UserInfo[];
     items: Item[];
-    cart: CartItemType[];
 
     // New properties
     userInfo?: SOILUserInfo;
@@ -36,7 +32,6 @@ interface UnparsedSoilInfo
 }
 
 const emptySoilInfo: SoilInfo = {
-    cart: [],
     items: [],
 };
 

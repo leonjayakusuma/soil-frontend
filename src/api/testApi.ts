@@ -181,22 +181,29 @@ export async function checkApiStatus(endpoint?: string) {
  * }, []);
  */
 
-// Run if executed directly (e.g., `tsx src/api/testApi.ts` or `npm run test:api`)
-// In Node.js environment, use the Node.js-compatible test function
-if (typeof process !== 'undefined' && process.argv) {
-    const endpoint = process.argv[2] || "/health";
-    
-    testApiNodeJs(endpoint)
-        .then((result) => {
-            if (result.isReachable) {
-                process.exit(0);
-            } else {
-                console.error("\n❌ API connectivity test failed");
-                process.exit(1);
-            }
-        })
-        .catch((error) => {
-            console.error("\n❌ Error running API test:", error);
-            process.exit(1);
-        });
+// Run only when executed directly, not when imported (important for Vitest/Jest).
+// Works for Node ESM:
+// - `node src/api/testApi.ts` (via tsx/ts-node) sets process.argv[1] to this file
+if (typeof process !== "undefined" && Array.isArray(process.argv)) {
+    try {
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const { pathToFileURL } = require("url") as typeof import("url");
+        const isDirectRun =
+            typeof process.argv[1] === "string" &&
+            import.meta.url === pathToFileURL(process.argv[1]).href;
+
+        if (isDirectRun) {
+            const endpoint = process.argv[2] || "/health";
+            testApiNodeJs(endpoint)
+                .then((result) => {
+                    process.exit(result.isReachable ? 0 : 1);
+                })
+                .catch((error) => {
+                    console.error("\n❌ Error running API test:", error);
+                    process.exit(1);
+                });
+        }
+    } catch {
+        // If `require("url")` isn't available, just don't auto-run.
+    }
 }

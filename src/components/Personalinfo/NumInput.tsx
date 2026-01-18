@@ -1,5 +1,5 @@
 import { Ctx, Container } from "@/components/Personalinfo";
-import { PersonalInfo } from "@shared/types";
+import { PersonalInfo } from "@/types";
 import { useState, useContext } from "react";
 import NumericInput from "@/shared/NumericInput";
 

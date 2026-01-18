@@ -1,10 +1,5 @@
 // Domain models - used across multiple modules
 
-export type Tokens = {
-    accessToken: string;
-    refreshToken: string;
-};
-
 export interface Item {
     id: number;
     title: string;
@@ -18,10 +13,15 @@ export interface Item {
     imgUrl?: string;
 }
 
+export type CartItemDetails = Pick<
+    Item,
+    "id" | "title" | "price" | "discount" | "imgUrl"
+>;
+
 export interface CartItem {
-    item: Item;
+    item: CartItemDetails;
     quantity: number;
-    subTotal: number;  // Keep this version (from shared/types.ts)
+    subTotal: number;
 }
 
 export interface Review {
